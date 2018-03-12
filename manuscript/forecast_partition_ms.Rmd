@@ -1,0 +1,101 @@
+---
+title: Quantifying and partitioning uncertainty to improve ecological forecasts
+author: Andrew T. Tredennick$^{1}$, Peter B. Adler$^1$, and others$^{2}$
+csl: ecology.csl
+output:
+  pdf_document:
+    keep_tex: yes
+  html_document: default
+geometry: left=1in, right=1in, top=1in, bottom=1in, headheight=12pt, letterpaper
+header-includes:
+- \usepackage{mathptmx}
+- \usepackage{bm}
+- \usepackage{setspace}
+- \usepackage{booktabs}
+- \doublespacing
+- \usepackage{lineno}
+- \linenumbers
+fontsize: 12pt
+bibliography: /Users/atredenn/Dropbox/Bibliography/ecocast.bib
+---
+<!-- bibliography: lemonade_ms.bib -->
+\setlength{\abovedisplayskip}{0pt}
+\raggedright
+
+$^1$ Department of Wildland Resources and the Ecology Center, Utah State University, Logan, UT, United States
+
+$^2$ Department of somewhere
+
+# Abstract
+
+Making informed ecosystem management decisions in the face of rapid environmental change requires forecasts from models of ecological processes.
+However, forecasts from ecological models are often associated with high degrees of uncertainty, making it difficult for such forecasts to inform decision-making processes.
+To make progress toward the goal of reliable and informative ecological forecasts, we need to know from where forecast uncertainty arises.
+Such knowledge can guide investment in future research that will most improve forecast skill.
+Here we develop a simulation-based approach for quantifying and partitioning forecast uncertainty from Bayesian state-space models that overcomes the limitations of previous analytical approaches.
+Our approach is similar to an Analysis of Variance, where the total variance of a forecast is paritioned among its constituent parts, namely initial conditions uncertainty, parameter uncertainty, driver uncertainty, process error, and their interactions.
+We demonstrate the approach with simulated data and with an empirical example using data from the Yellowstone bison herd.
+We also provide general functions written in the statistical programming language R, which should allow others using Bayesian state-space models to employ our approach in their own research.
+
+*Keywords: forecast, Markov chain Monte Carlo, prediction, population model, uncertainty*
+
+# Introduction
+
+A fundamental challenge facing society is to predict the ecological impacts of global environmental changes such as nitrogen deposition, climate change, and habitat fragmentation.
+Each of these global change drivers have now exceeded their historical ranges of variability [@Steffen2015], ushering in a no-analog era in which the past cannot predict the future.
+We can, however, look to the past to parameterize models that allow us to forecast the future states of ecological systems [@Clark2001; @Dietze2018].
+Ecologists are in an excellent position to meet this forecasting challenge because we have spent decades gaining understanding of the processes that regulate populations, communities, and ecosystems.
+However, we lack a systematic understanding of the current limits to ecological forecasts.
+As a result, we do not know how to allocate research effort to improve our forecasts.
+
+Making poor forecasts is inevitable as ecology matures into a more predictive science.
+The key is to learn from our failures so that forecasts become more accurate over time.
+The success of meteorological forecasting tells us that basic research on the causes of forecast uncertainty is an essential component of this learning process [@Bauer2015].
+
+Various approaches have been used to characterize and partition forecast uncertainty [@Sobol1993; @Cariboni2007].
+For example, consider a dynamic model designed to predict some state *y* in the future ($y_{t+1}$) based on the current state ($y_{t}$), an environmental driver(s) ($x$), parameters ($\theta$), and process error ($\epsilon$).
+We can then write a general form of the model as:
+
+\begin{align}
+y_{t+1} = f(y_t, x_t|\theta) + \epsilon_{t+1},
+\end{align}
+
+which states that $y$ at time $t+1$ is a function of $y$ and $x$ at time $t$ conditional on the model parameters ($\theta$) plus process error ($\epsilon$).
+Ignoring covariance among factors, @Dietze2017a, following @Sobol1993 and @Cariboni2007, suggests that forecast variance ($Var[y_{t+1}]$) is approximately:
+
+\begin{align}
+Var[y_{t+1}] \approx \underbrace{\left(\frac{\delta f}{\delta y} \right)^2}_{\text{stability}} 
+               \underbrace{\vphantom{ \left(\frac{\delta f}{\delta y} \right)^2 } Var[y_t]}_{\text{IC uncert.}} +
+               \underbrace{\vphantom{ \left(\frac{\delta f}{\delta y} \right)^2 }\left(\frac{\delta f}{\delta x} \right)^2}_{\text{driver sens.}} 
+               \underbrace{\vphantom{ \left(\frac{\delta f}{\delta y} \right)^2 } Var[x_t]}_{\text{driver uncert.}} +
+               \underbrace{\vphantom{ \left(\frac{\delta f}{\delta y} \right)^2 }\left(\frac{\delta f}{\delta \theta} \right)^2}_{\text{param sens.}}
+               \underbrace{\vphantom{ \left(\frac{\delta f}{\delta y} \right)^2 } Var[\theta]}_{\text{param. uncert.}} +
+               \underbrace{\vphantom{ \left(\frac{\delta f}{\delta y} \right)^2 } Var[\epsilon_{t+1}]}_{\text{process error}},
+\end{align}
+
+where each additive term follows a pattern of *sensitivity* times *variance* and "IC uncert." refers to "*I*nitial *C*onditions uncertainty."
+The variance attributable to any particular factor is a function of how sensitive the model is to the factor and the variance of that factor.
+For example, the atmosphere is a chaotic system, meaning its dynamics are internally unstable and sensitive to initial conditions uncertainty.
+This is why billions of dollars are spent each year to measure meterological variables -- meterologists learned that the key to reducing forecast error $(Var[y_{t+1}])$ was to reduce the uncertainty of initial conditions ($Var[y_t]$).
+
+In contrast, ecologists are attempting to make actionable forecasts with little knowledge of which term in Eq. 2 dominates forecast error.
+Knowing which term dominates forecast error in different ecological settings will advance our fundamental understanding of the natural world and immediately impact practical efforts to monitor, model, and predict ecological dynamics.
+
+# A simulation-based approach for partitioning uncertainty
+
+Analytical expressions of forecast uncertainty must rely on simplifying assumptions.
+Two important assumptions are (1) that different sources of uncertainty do not interact and (2) that the system of equations is linear.
+These analytical expressions are important for guiding our intuition, but these strict assumptions limit our ability to partition forecast uncertainty in practice.
+Thus, we present a simulation approach that is entirely model-based and requires no assumptions, other than those embedded in the model itself.
+We are building on the ideas put forth by @Dietze2017a, who suggested a simulation approach for quantifying the terms in Eq. 2.
+Here we test the general idea using simulated data and extend the approach to consider interactions among sources of uncertainty.
+
+As a starting point, consider the general state-space model
+
+\begin{gather}
+\left[y_{(t)} \;|\; z_{(t)}, \sigma^2_{\text{o}}\right], \\
+\left[z_{(t)} \;|\; \mu_{(t)}, \sigma^2_{\text{p}}\right], \\
+\mu_{(t+1)} = g \left(z_{(t)},\textbf{x}'_{(t)}, \bm{\theta} \right), \\
+\end{gather}
+
+# References
