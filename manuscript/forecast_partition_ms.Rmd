@@ -106,5 +106,7 @@ The notation $\left[a \;|\; b, c\right]$ reads, "the probability of *a* given *b
 This type of model is easily fit using Bayesian methods and Markov chain Monte carlo (MCMC) algorithms.
 The posterior distribution of all unkowns, including states and parameters, is estimated over *K* MCMC iterations.
 
+![ Example. ](../figures/init_cond_example.pdf){ height=2in }
+
 
 # References
