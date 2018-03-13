@@ -18,15 +18,173 @@ rm(list = ls(all.names = TRUE))
 ####
 library(tidyverse)
 library(dplyr)
+library(ggthemes)
 
 
 
 ####
 ####  DEFINE SIMULATOR FUNCTION ------------------------------------------------
 ####
-generate_forecast <- function(z_bar, z_sigma, 
-                              theta_bar, theta_sigma, 
-                              x_bar, x_sigma, proc_sigma, 
-                              ntimes, niters){
+generate_forecast <- function(z_bar, 
+                              z_sigma, 
+                              a_bar,
+                              a_sigma,
+                              theta_bar = NULL, 
+                              theta_sigma = NULL, 
+                              x_bar = NULL, 
+                              x_sigma = NULL, 
+                              proc_sigma, 
+                              n_times, 
+                              n_iters,
+                              seed = NULL){
+  if(is.null(seed) == FALSE){
+    set.seed(seed)
+  }
   
+  if(is.null(x_bar) == FALSE){
+    if(is.matrix(x_bar) == FALSE){
+      stop("x_bar must be a matrix even if only providing one covariate.
+           Coerce to a single column matrix, with the number of rows equal
+           to the number of time steps to be forecast.")
+    }
+    
+    if((ncol(x_bar)-1) != length(theta_bar)){
+      stop("The number of covariates [ncol(x_bar)] and the number of
+           coefficients [length(theta_bar)] do not match.")
+    }
+  }
+ 
+  
+  # Generate vector of initial conditions
+  Z <- rnorm(n_iters, z_bar, z_sigma)
+  
+  # Generate vector of autoregressive terms
+  A <- rnorm(n_iters, a_bar, a_sigma)
+  
+  # Generate array of time-varying covariates
+  if(is.null(x_bar) == FALSE){
+    X <- array(NA, dim = c((ncol(x_bar)+1), n_iters, n_times))
+    X[1,,] <- 1 # make first rows 1 for the intercept
+    for(dot in 1:n_times){
+      for(dox in 1:ncol(x_bar)){
+        X[dox+1,,dot] <- rnorm(n_iters, x_bar[dot,dox], x_sigma[dot,dox])
+      }
+    }
+  }
+  
+  
+  # Generate matrix of time-invariant parameters
+  if(is.null(theta_bar) == FALSE){
+    Theta <- matrix(NA, length(theta_bar), n_iters)
+    for(dotheta in 1:length(theta_bar)){
+      Theta[, dotheta] <- rnorm(n_iters, theta_bar[dotheta], theta_sigma[dotheta])
+    }
+  }
+  
+  # Generate matrix of forecasts
+  forecasts <- matrix(NA, n_times, n_iters)
+  
+  if(is.null(theta_bar)){
+    for(iiter in 1:n_times){
+      Z <- A*Z
+      forecasts[iiter, ] <- rnorm(n_iters, Z, proc_sigma) 
+    }
+  }else{
+    for(iiter in 1:n_times){
+      mu <- A*Z[iiter] + X[iiter, ]*Theta
+      forecasts[iiter, ] <- rnorm(n_iters, mu, proc_sigma) 
+    }
+  }
+  
+  return(forecasts)
 }
+
+
+
+####
+####  GENERATE FORECASTS -------------------------------------------------------
+####
+z_bar <- 0
+z_sigma <- 1.2
+a_bar <- 0.8
+a_sigma <- 0.1
+proc_sigma <- 0.2
+n_times <- 20
+n_iters <- 100
+
+outcasts_all <- generate_forecast(z_bar,
+                                  z_sigma, 
+                                  a_bar,
+                                  a_sigma,
+                                  theta_bar = NULL, 
+                                  theta_sigma = NULL, 
+                                  x_bar = NULL, 
+                                  x_sigma = NULL, 
+                                  proc_sigma, 
+                                  n_times, 
+                                  n_iters,
+                                  seed = 112)
+
+outcasts_noproc <- generate_forecast(z_bar,
+                                  z_sigma, 
+                                  a_bar,
+                                  a_sigma,
+                                  theta_bar = NULL, 
+                                  theta_sigma = NULL, 
+                                  x_bar = NULL, 
+                                  x_sigma = NULL, 
+                                  proc_sigma = 0, 
+                                  n_times, 
+                                  n_iters,
+                                  seed = 112)
+
+outcasts_noparam <- generate_forecast(z_bar,
+                                  z_sigma, 
+                                  a_bar,
+                                  a_sigma = 0,
+                                  theta_bar = NULL, 
+                                  theta_sigma = NULL, 
+                                  x_bar = NULL, 
+                                  x_sigma = NULL, 
+                                  proc_sigma, 
+                                  n_times, 
+                                  n_iters,
+                                  seed = 112)
+
+outcasts_noinit <- generate_forecast(z_bar,
+                                      z_sigma = 0, 
+                                      a_bar,
+                                      a_sigma,
+                                      theta_bar = NULL, 
+                                      theta_sigma = NULL, 
+                                      x_bar = NULL, 
+                                      x_sigma = NULL, 
+                                      proc_sigma, 
+                                      n_times, 
+                                      n_iters,
+                                      seed = 112)
+
+outcasts_combined <- as.data.frame(outcasts_all) %>%
+  mutate(year = 1:20) %>%
+  gather(key,value,-year) %>%
+  mutate(simulation = "all") %>%
+  rbind(as.data.frame(outcasts_noproc) %>%
+          mutate(year = 1:20) %>%
+          gather(key,value,-year) %>%
+          mutate(simulation = "noproc")) %>%
+  rbind(as.data.frame(outcasts_noinit) %>%
+          mutate(year = 1:20) %>%
+          gather(key,value,-year) %>%
+          mutate(simulation = "noinit")) %>%
+  rbind(as.data.frame(outcasts_noparam) %>%
+          mutate(year = 1:20) %>%
+          gather(key,value,-year) %>%
+          mutate(simulation = "noparam"))
+
+ggplot(outcasts_combined, aes(x = year, y = value, group = key))+
+  geom_line(color = "darkgrey", alpha = 0.8)+
+  facet_wrap(~simulation, ncol = 1)+
+  theme_few()
+
+  
+
