@@ -105,14 +105,14 @@ generate_forecast <- function(z_bar,
 ####
 ####  GENERATE FORECASTS -------------------------------------------------------
 ####
-z_bar <- 0
-z_sigma <- 1.2
+z_bar <- -20
+z_sigma <- 1.5
 a_bar <- 0.8
 a_sigma <- 0.1
-proc_sigma <- 0.2
-n_times <- 20
+proc_sigma <- 1.6
+n_times <- 10
 n_iters <- 100
-seed <- 122
+seed <- 126
 
 outcasts_all <- generate_forecast(z_bar,
                                   z_sigma, 
@@ -167,28 +167,30 @@ outcasts_noinit <- generate_forecast(z_bar,
                                       seed)
 
 outcasts_combined <- as.data.frame(outcasts_all) %>%
-  mutate(year = 0:20) %>%
+  mutate(year = 0:n_times) %>%
   gather(key,value,-year) %>%
-  mutate(simulation = "all") %>%
+  mutate(simulation = "A) All sources") %>%
   rbind(as.data.frame(outcasts_noproc) %>%
-          mutate(year = 0:20) %>%
+          mutate(year = 0:n_times) %>%
           gather(key,value,-year) %>%
-          mutate(simulation = "noproc")) %>%
+          mutate(simulation = "D) No process error")) %>%
   rbind(as.data.frame(outcasts_noinit) %>%
-          mutate(year = 0:20) %>%
+          mutate(year = 0:n_times) %>%
           gather(key,value,-year) %>%
-          mutate(simulation = "noinit")) %>%
+          mutate(simulation = "B) No initial conditions error")) %>%
   rbind(as.data.frame(outcasts_noparam) %>%
-          mutate(year = 0:20) %>%
+          mutate(year = 0:n_times) %>%
           gather(key,value,-year) %>%
-          mutate(simulation = "noparam"))
+          mutate(simulation = "C) No parameter error"))
 
 ggplot(outcasts_combined, aes(x = year, y = value, group = key))+
   geom_line(color = "darkgrey", alpha = 0.8)+
   facet_wrap(~simulation, ncol = 4)+
+  scale_x_continuous(breaks = c(0,2,4,6,8,10))+
   ylab("State")+
   xlab("Forecast year")+
-  theme_few()
+  theme_few()+
+  theme(axis.text.y = element_blank())
 
   
 
