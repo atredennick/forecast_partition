@@ -82,12 +82,13 @@ generate_forecast <- function(z_bar,
   }
   
   # Generate matrix of forecasts
-  forecasts <- matrix(NA, n_times, n_iters)
+  forecasts <- matrix(NA, n_times+1, n_iters)
+  forecasts[1,] <- Z
   
   if(is.null(theta_bar)){
     for(iiter in 1:n_times){
       Z <- A*Z
-      forecasts[iiter, ] <- rnorm(n_iters, Z, proc_sigma) 
+      forecasts[iiter+1, ] <- rnorm(n_iters, Z, proc_sigma) 
     }
   }else{
     for(iiter in 1:n_times){
@@ -111,6 +112,7 @@ a_sigma <- 0.1
 proc_sigma <- 0.2
 n_times <- 20
 n_iters <- 100
+seed <- 122
 
 outcasts_all <- generate_forecast(z_bar,
                                   z_sigma, 
@@ -123,7 +125,7 @@ outcasts_all <- generate_forecast(z_bar,
                                   proc_sigma, 
                                   n_times, 
                                   n_iters,
-                                  seed = 112)
+                                  seed)
 
 outcasts_noproc <- generate_forecast(z_bar,
                                   z_sigma, 
@@ -136,7 +138,7 @@ outcasts_noproc <- generate_forecast(z_bar,
                                   proc_sigma = 0, 
                                   n_times, 
                                   n_iters,
-                                  seed = 112)
+                                  seed)
 
 outcasts_noparam <- generate_forecast(z_bar,
                                   z_sigma, 
@@ -149,7 +151,7 @@ outcasts_noparam <- generate_forecast(z_bar,
                                   proc_sigma, 
                                   n_times, 
                                   n_iters,
-                                  seed = 112)
+                                  seed)
 
 outcasts_noinit <- generate_forecast(z_bar,
                                       z_sigma = 0, 
@@ -162,28 +164,30 @@ outcasts_noinit <- generate_forecast(z_bar,
                                       proc_sigma, 
                                       n_times, 
                                       n_iters,
-                                      seed = 112)
+                                      seed)
 
 outcasts_combined <- as.data.frame(outcasts_all) %>%
-  mutate(year = 1:20) %>%
+  mutate(year = 0:20) %>%
   gather(key,value,-year) %>%
   mutate(simulation = "all") %>%
   rbind(as.data.frame(outcasts_noproc) %>%
-          mutate(year = 1:20) %>%
+          mutate(year = 0:20) %>%
           gather(key,value,-year) %>%
           mutate(simulation = "noproc")) %>%
   rbind(as.data.frame(outcasts_noinit) %>%
-          mutate(year = 1:20) %>%
+          mutate(year = 0:20) %>%
           gather(key,value,-year) %>%
           mutate(simulation = "noinit")) %>%
   rbind(as.data.frame(outcasts_noparam) %>%
-          mutate(year = 1:20) %>%
+          mutate(year = 0:20) %>%
           gather(key,value,-year) %>%
           mutate(simulation = "noparam"))
 
 ggplot(outcasts_combined, aes(x = year, y = value, group = key))+
   geom_line(color = "darkgrey", alpha = 0.8)+
-  facet_wrap(~simulation, ncol = 1)+
+  facet_wrap(~simulation, ncol = 4)+
+  ylab("State")+
+  xlab("Forecast year")+
   theme_few()
 
   
