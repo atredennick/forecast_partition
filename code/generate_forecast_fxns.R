@@ -187,10 +187,10 @@ ggplot(outcasts_combined, aes(x = year, y = value, group = key))+
   geom_line(color = "darkgrey", alpha = 0.8)+
   facet_wrap(~simulation, ncol = 4)+
   scale_x_continuous(breaks = c(0,2,4,6,8,10))+
-  ylab("State")+
+  ylab("State of interest")+
   xlab("Forecast year")+
   theme_few()+
   theme(axis.text.y = element_blank())
-
+ggsave(filename = "../figures/forecast_uncertainty_example.pdf", width = 8.5, height = 3, units = "in")
   
 

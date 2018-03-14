@@ -197,6 +197,22 @@ settings will advance our fundamental understanding of the natural world
 and immediately impact practical efforts to monitor, model, and predict
 ecological dynamics.
 
+\begin{figure}
+\centering
+\includegraphics{../figures/forecast_uncertainty_example.pdf}
+\caption{Example of forecast uncertainty with different sources of error
+set to zero. Each line represents one realization, out of 200, from an
+order-one autoregressive model (AR1 process). Contrary to the analytical
+expression (Eq. 2), initial conditions uncertainty and parameter
+uncertainty clearly interact. The spread of lines in (A) is not wholly
+because of initial conditions uncertainty (B) or parameter uncertainty
+(C), it is their combined influence that causes the spread of
+realizations in (A). At least in this example, process error (D) does
+appear to be independent, but we used a small value of process error to
+highlight other interactions. Source code:
+\texttt{generate\_forecast\_fxns.R}.}
+\end{figure}
+
 \section{A simulation-based approach for partitioning
 uncertainty}\label{a-simulation-based-approach-for-partitioning-uncertainty}
 
@@ -213,11 +229,11 @@ quantifying the terms in Eq. 2. Here we test the general idea using
 simulated data and extend the approach to consider interactions among
 sources of uncertainty.
 
-As a starting point, consider the general state-space model
+As a starting point, consider a generic Bayesian state-space model
 
 \begin{gather}
-\left[y_{(t)} \;|\; z_{(t)}, \sigma^2_{\text{o}}\right], \\
-\left[z_{(t)} \;|\; \mu_{(t)}, \sigma^2_{\text{p}}\right], \\
+y_{(t)} \sim \left[y_{(t)} \;|\; z_{(t)}, \sigma^2_{\text{o}}\right], \\
+z_{(t)} \sim \left[z_{(t)} \;|\; \mu_{(t)}, \sigma^2_{\text{p}}\right], \\
 \mu_{(t)} = g \left(z_{(t-1)},\textbf{x}'_{(t)}, \bm{\uptheta} \right),
 \end{gather}
 
@@ -239,7 +255,15 @@ MCMC iterations.
 \begin{figure}
 \centering
 \includegraphics[height=2.00000in]{../figures/init_cond_example.pdf}
-\caption{Example.}
+\caption{Forecasts can be made using (A) a point estimate of the median
+of the latent state \emph{z}, \(\bar{z}_{(t)}\), as a starting value or
+(B) using the full distribution of \emph{z}, \([z_{(t)}]\). In both
+panels, the small points are the estimates of \emph{z} at time \emph{t}
+from each of 1000 MCMC iterations, the boxplots show the distribution,
+and the large point shows the median. The scenario in A represents the
+case where initial conditions uncertainty is set to zero. Comparing the
+variance of forecasts made under scenarios A and B allows us to quantify
+the amount of uncertainty attributable to initial conditions.}
 \end{figure}
 
 \section*{References}\label{references}
