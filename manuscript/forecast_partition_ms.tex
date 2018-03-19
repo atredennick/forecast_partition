@@ -266,6 +266,19 @@ error and \(\sigma^2_{\text{p}}\) is process error. The notation
 the prior probability distributions for all parameters in the parameter
 vector, \(\bm{\uptheta}\).
 
+For our purposes, we are interested in the probability distributions of
+the true state \textbf{z} at future points in time, conditional on
+previous observations (\textbf{y}). This is referred to as the forecast
+distribution or the predictive process distribution (Hobbs and Hooten
+2015), which, for one time step ahead of the final observation
+(\(T+1\)), is defined as
+
+\begin{equation}
+\begin{gathered}
+\left[z_{T+1} | y_1,\dots,y_T \right] = \int \dots \int \left[z_{T+1} | z_T,\bm{\uptheta} \right] \\ \left[z_1,\dots,z_T,\bm{\uptheta} | y_1,\dots,y_T \right] d\bm{\uptheta} dz_1 \dots dz_T.
+\end{gathered}
+\end{equation}
+
 This type of model is easily fit using Bayesian methods and Markov chain
 Monte carlo (MCMC) algorithms. The posterior distribution of all
 unkowns, including states and parameters, is estimated over \emph{K}
@@ -318,6 +331,10 @@ E. K. Read, A. T. Tredennick, R. Vargas, K. C. Weathers, and E. P.
 White. 2018. Iterative near-term ecological forecasting: Needs,
 opportunities, and challenges. Proceedings of the National Academy of
 Sciences 115:1424--1432.
+
+\leavevmode\hypertarget{ref-Hobbs2015}{}%
+Hobbs, N. T., and M. B. Hooten. 2015. Bayesian Models: A Statistical
+Primer for Ecologists. Princeton University Press, Princeton.
 
 \leavevmode\hypertarget{ref-Sobol1993}{}%
 Sobol', I. 1993. Sensitivity Estimates for Nonlinear Mathematical

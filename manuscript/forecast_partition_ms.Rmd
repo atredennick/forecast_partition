@@ -119,6 +119,15 @@ As a starting point, consider a generic Bayesian state-space model
 $\sigma^2_{\text{o}}$ is observation error and $\sigma^2_{\text{p}}$ is process error.
 The notation $\left[a \;|\; b, c\right]$ reads, "the probability of *a* given *b* and *c*," and $\left[\bm{\uptheta}\right]$ refers to the prior probability distributions for all parameters in the parameter vector, $\bm{\uptheta}$.
 
+For our purposes, we are interested in the probability distributions of the true state **z** at future points in time, conditional on previous observations (**y**).
+This is referred to as the forecast distribution or the predictive process distribution [@Hobbs2015], which, for one time step ahead of the final observation ($T+1$), is defined as
+
+\begin{equation}
+\begin{gathered}
+\left[z_{T+1} | y_1,\dots,y_T \right] = \int \dots \int \left[z_{T+1} | z_T,\bm{\uptheta} \right] \\ \left[z_1,\dots,z_T,\bm{\uptheta} | y_1,\dots,y_T \right] d\bm{\uptheta} dz_1 \dots dz_T.
+\end{gathered}
+\end{equation}
+
 This type of model is easily fit using Bayesian methods and Markov chain Monte carlo (MCMC) algorithms.
 The posterior distribution of all unkowns, including states and parameters, is estimated over *K* MCMC iterations.
 
