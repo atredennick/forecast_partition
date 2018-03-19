@@ -95,15 +95,14 @@ to improve ecological forecasts}
 \begin{document}
 \maketitle
 
-\setlength{\abovedisplayskip}{0pt}\raggedright
+\setlength{\abovedisplayskip}{0pt} \raggedright
 
 \(^1\) Department of Wildland Resources and the Ecology Center, Utah
 State University, Logan, UT, United States
 
 \(^2\) Department of somewhere
 
-\hypertarget{abstract}{%
-\section{Abstract}\label{abstract}}
+\section{Abstract}\label{abstract}
 
 Making informed ecosystem management decisions in the face of rapid
 environmental change requires forecasts from models of ecological
@@ -113,24 +112,29 @@ such forecasts to inform decision-making processes. To make progress
 toward the goal of reliable and informative ecological forecasts, we
 need to know from where forecast uncertainty arises. Such knowledge can
 guide investment in future research that will most improve forecast
-skill. Here we develop a simulation-based approach for quantifying and
-partitioning forecast uncertainty from Bayesian state-space models that
-overcomes the limitations of previous analytical approaches. Our
-approach is similar to an Analysis of Variance, where the total variance
-of a forecast is paritioned among its constituent parts, namely initial
-conditions uncertainty, parameter uncertainty, driver uncertainty,
-process error, and their interactions. We demonstrate the approach with
-simulated data and with an empirical example using data from the
-Yellowstone bison population. We also provide functions written in the
-statistical programming language R, which will allow others using
-Bayesian state-space models to employ our approach in their own
-research.
+skill. There is a rich history of analytical expressions that partition
+the variance of future dynamics, but these expressions suffer from
+necessary assumptions such as linear dynamics and small-variance
+approximations that exclude interactions. Similarly, the earth systems
+modeling community has developed methods for paritioning uncertainty of
+model projections, but these operate at a different modeling grain than
+most of ecology. Building on these approaches, we develop a
+simulation-based approach for quantifying and partitioning forecast
+uncertainty from Bayesian state-space models that overcomes the
+limitations of previous analytical approaches. Our approach is similar
+to an Analysis of Variance, where the total variance of a forecast is
+paritioned among its constituent parts, namely initial conditions
+uncertainty, parameter uncertainty, driver uncertainty, process error,
+and their interactions. We demonstrate the approach with simulated data
+and with an empirical example using data from the Yellowstone bison
+population. We also provide functions written in the statistical
+programming language R, which will allow others using Bayesian
+state-space models to employ our approach in their own research.
 
-\emph{Keywords: forecast, Markov chain Monte Carlo, prediction,
-population model, uncertainty}
+\emph{Keywords: Bayesian state-space model, forecast, Markov chain Monte
+Carlo, prediction, population model, uncertainty, Yellowstone bison}
 
-\hypertarget{introduction}{%
-\section{Introduction}\label{introduction}}
+\section{Introduction}\label{introduction}
 
 A fundamental challenge facing society is to predict the ecological
 impacts of global environmental changes such as nitrogen deposition,
@@ -228,9 +232,8 @@ highlight other interactions. Source code:
 \texttt{generate\_forecast\_fxns.R}.}
 \end{figure}
 
-\hypertarget{a-simulation-based-approach-for-partitioning-uncertainty}{%
-\section{A simulation-based approach for partitioning
-uncertainty}\label{a-simulation-based-approach-for-partitioning-uncertainty}}
+\section{A Simulation-Based Approach for Partitioning Forecast
+Uncertainty}\label{a-simulation-based-approach-for-partitioning-forecast-uncertainty}
 
 Analytical expressions of forecast uncertainty must rely on simplifying
 assumptions. Two important assumptions are (1) that different sources of
@@ -248,10 +251,10 @@ sources of uncertainty.
 As a starting point, consider a generic Bayesian state-space model
 
 \begin{align}
-\textbf{Data model:} \quad y_t &\sim \left[y_t \;|\; z_t, \sigma^2_{\text{o}}\right], &t = 1,\dots,T, \\
-\textbf{Process models:} \quad z_t &\sim \left[z_t \;|\; \mu_t, \sigma^2_{\text{p}}\right],  \\
+\textbf{Data Model:} \quad y_t &\sim \left[y_t \;|\; z_t, \sigma^2_{\text{o}}\right], &t = 1,\dots,T, \\
+\textbf{Process Models:} \quad z_t &\sim \left[z_t \;|\; \mu_t, \sigma^2_{\text{p}}\right],  \\
 \mu_t &= g \left(z_{t-1},\textbf{x}'_t, \bm{\uptheta} \right), &t = 2,\dots,T, \\
-\textbf{Parameter model:} \quad \bm{\uptheta} &\sim \left[\bm{\uptheta}\right],
+\textbf{Parameter Models:} \quad \bm{\upphi} &\sim \left[\bm{\uptheta},\sigma^2_{\text{p}},\sigma^2_{\text{o}},z_{t=1} \right],
 \end{align}
 
 \noindent{}where \(y_t\) is the observed state at time \emph{t}, \(z_t\)
@@ -262,20 +265,20 @@ covariates (\textbf{x}) at time \emph{t}, and a set of unknown
 parameters, \(\bm{\uptheta}\). \(\sigma^2_{\text{o}}\) is observation
 error and \(\sigma^2_{\text{p}}\) is process error. The notation
 \(\left[a \;|\; b, c\right]\) reads, ``the probability of \emph{a} given
-\emph{b} and \emph{c},'' and \(\left[\bm{\uptheta}\right]\) refers to
-the prior probability distributions for all parameters in the parameter
-vector, \(\bm{\uptheta}\).
+\emph{b} and \emph{c}'' (Gelfand and Smith 1990), and \(\bm{\upphi}\)
+refers to the prior probability distributions for all unknown parameters
+and the initial conditions for the latent state, \(z_{t=1}\).
 
 For our purposes, we are interested in the probability distributions of
 the true state \textbf{z} at future points in time, conditional on
 previous observations (\textbf{y}). This is referred to as the forecast
 distribution or the predictive process distribution (Hobbs and Hooten
-2015), which, for one time step ahead of the final observation
-(\(T+1\)), is defined as
+2015 pp. 199--200), which, for one time step ahead of the final
+observation (\(T+1\)), is defined as
 
 \begin{equation}
 \begin{gathered}
-\left[z_{T+1} | y_1,\dots,y_T \right] = \int \dots \int \left[z_{T+1} | z_T,\bm{\uptheta} \right] \\ \left[z_1,\dots,z_T,\bm{\uptheta} | y_1,\dots,y_T \right] d\bm{\uptheta} dz_1 \dots dz_T.
+\left[z_{T+1} | y_1,\dots,y_T \right] = \int \int \dots \int \left[z_{T+1} | z_T,\bm{\uptheta}, \sigma^2_{\text{p}} \right] \\ \times \left[z_1,\dots,z_T,\bm{\uptheta}, \sigma^2_{\text{p}} | y_1,\dots,y_T \right] d\bm{\uptheta} d\sigma^2_{\text{p}} dz_1 \dots dz_T.
 \end{gathered}
 \end{equation}
 
@@ -286,7 +289,7 @@ MCMC iterations.
 
 \begin{figure}
 \centering
-\includegraphics[width=\textwidth,height=2in]{../figures/init_cond_example.pdf}
+\includegraphics[height=2.00000in]{../figures/init_cond_example.pdf}
 \caption{Forecasts can be made using (A) a point estimate of the median
 of the latent state \emph{z}, \(\bar{z}_{(t)}\), as a starting value or
 (B) using the full distribution of \emph{z}, \([z_{(t)}]\). In both
@@ -298,32 +301,34 @@ variance of forecasts made under scenarios A and B allows us to quantify
 the amount of uncertainty attributable to initial conditions.}
 \end{figure}
 
-\hypertarget{references}{%
-\section*{References}\label{references}}
+\section{Application: Yellowstone Bison
+Population}\label{application-yellowstone-bison-population}
+
+\section*{References}\label{references}
 \addcontentsline{toc}{section}{References}
 
 \hypertarget{refs}{}
-\leavevmode\hypertarget{ref-Bauer2015}{}%
+\hypertarget{ref-Bauer2015}{}
 Bauer, P., A. Thorpe, and G. Brunet. 2015. The quiet revolution of
 numerical weather prediction. Nature 525:47--55.
 
-\leavevmode\hypertarget{ref-Cariboni2007}{}%
+\hypertarget{ref-Cariboni2007}{}
 Cariboni, J., D. Gatelli, R. Liska, and A. Saltelli. 2007. The role of
 sensitivity analysis in ecological modelling. Ecological Modelling
 203:167--182.
 
-\leavevmode\hypertarget{ref-Clark2001}{}%
+\hypertarget{ref-Clark2001}{}
 Clark, J. S., S. R. Carpenter, M. Barber, S. Collins, A. Dobson, J. A.
 Foley, D. M. Lodge, M. Pascual, R. Pielke, W. Pizer, C. Pringle, W. V.
 Reid, K. A. Rose, O. Sala, W. H. Schlesinger, D. H. Wall, and D. Wear.
 2001. Ecological forecasts: an emerging imperative. Science
 293:657--660.
 
-\leavevmode\hypertarget{ref-Dietze2017a}{}%
+\hypertarget{ref-Dietze2017a}{}
 Dietze, M. C. 2017. Prediction in ecology: A first-principles framework.
 Ecological Applications 27:2048--2060.
 
-\leavevmode\hypertarget{ref-Dietze2018}{}%
+\hypertarget{ref-Dietze2018}{}
 Dietze, M. C., A. Fox, L. M. Beck-Johnson, J. L. Betancourt, M. B.
 Hooten, C. S. Jarnevich, T. H. Keitt, M. A. Kenney, C. M. Laney, L. G.
 Larsen, H. W. Loescher, C. K. Lunch, B. C. Pijanowski, J. T. Randerson,
@@ -332,15 +337,20 @@ White. 2018. Iterative near-term ecological forecasting: Needs,
 opportunities, and challenges. Proceedings of the National Academy of
 Sciences 115:1424--1432.
 
-\leavevmode\hypertarget{ref-Hobbs2015}{}%
+\hypertarget{ref-Gelfand1990}{}
+Gelfand, A. E., and A. F. Smith. 1990. Sampling-based approaches to
+calculating marginal densities. Journal of the American Statistical
+Association 85:398--409.
+
+\hypertarget{ref-Hobbs2015}{}
 Hobbs, N. T., and M. B. Hooten. 2015. Bayesian Models: A Statistical
 Primer for Ecologists. Princeton University Press, Princeton.
 
-\leavevmode\hypertarget{ref-Sobol1993}{}%
+\hypertarget{ref-Sobol1993}{}
 Sobol', I. 1993. Sensitivity Estimates for Nonlinear Mathematical
 Models.
 
-\leavevmode\hypertarget{ref-Steffen2015}{}%
+\hypertarget{ref-Steffen2015}{}
 Steffen, W., K. Richardson, J. Rockström, S. Cornell, I. Fetzer, E.
 Bennett, R. Biggs, and S. Carpenter. 2015. Planetary boundaries: Guiding
 human development on a changing planet. Science 348:1217.

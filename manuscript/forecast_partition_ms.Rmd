@@ -33,12 +33,14 @@ Making informed ecosystem management decisions in the face of rapid environmenta
 However, forecasts from ecological models are often associated with high degrees of uncertainty, making it difficult for such forecasts to inform decision-making processes.
 To make progress toward the goal of reliable and informative ecological forecasts, we need to know from where forecast uncertainty arises.
 Such knowledge can guide investment in future research that will most improve forecast skill.
-Here we develop a simulation-based approach for quantifying and partitioning forecast uncertainty from Bayesian state-space models that overcomes the limitations of previous analytical approaches.
+There is a rich history of analytical expressions that partition the variance of future dynamics, but these expressions suffer from necessary assumptions such as linear dynamics and small-variance approximations that exclude interactions.
+Similarly, the earth systems modeling community has developed methods for paritioning uncertainty of model projections, but these operate at a different modeling grain than most of ecology.
+Building on these approaches, we develop a simulation-based approach for quantifying and partitioning forecast uncertainty from Bayesian state-space models that overcomes the limitations of previous analytical approaches.
 Our approach is similar to an Analysis of Variance, where the total variance of a forecast is paritioned among its constituent parts, namely initial conditions uncertainty, parameter uncertainty, driver uncertainty, process error, and their interactions.
 We demonstrate the approach with simulated data and with an empirical example using data from the Yellowstone bison population.
 We also provide functions written in the statistical programming language R, which will allow others using Bayesian state-space models to employ our approach in their own research.
 
-*Keywords: forecast, Markov chain Monte Carlo, prediction, population model, uncertainty*
+*Keywords: Bayesian state-space model, forecast, Markov chain Monte Carlo, prediction, population model, uncertainty, Yellowstone bison*
 
 # Introduction
 
@@ -97,7 +99,7 @@ Therefore, progress in quantifying and partioning forecast uncertainty requires 
 
 ![ Example of forecast uncertainty with different sources of error set to zero. Each line represents one realization, out of 200, from an order-one autoregressive model (AR1 process). Contrary to the analytical expression (Eq. 2), initial conditions uncertainty and parameter uncertainty clearly interact. The spread of lines in (A) is not wholly because of initial conditions uncertainty (B) or parameter uncertainty (C), it is their combined influence that causes the spread of realizations in (A). At least in this example, process error (D) does appear to be independent, but we used a small value of process error to highlight other interactions. Source code: `generate_forecast_fxns.R`. ](../figures/forecast_uncertainty_example.pdf)
 
-# A simulation-based approach for partitioning uncertainty
+# A Simulation-Based Approach for Partitioning Forecast Uncertainty
 
 Analytical expressions of forecast uncertainty must rely on simplifying assumptions.
 Two important assumptions are (1) that different sources of uncertainty do not interact and (2) that the system of equations is linear.
@@ -109,22 +111,22 @@ Here we test the general idea using simulated data and extend the approach to co
 As a starting point, consider a generic Bayesian state-space model
 
 \begin{align}
-\textbf{Data model:} \quad y_t &\sim \left[y_t \;|\; z_t, \sigma^2_{\text{o}}\right], &t = 1,\dots,T, \\
-\textbf{Process models:} \quad z_t &\sim \left[z_t \;|\; \mu_t, \sigma^2_{\text{p}}\right],  \\
+\textbf{Data Model:} \quad y_t &\sim \left[y_t \;|\; z_t, \sigma^2_{\text{o}}\right], &t = 1,\dots,T, \\
+\textbf{Process Models:} \quad z_t &\sim \left[z_t \;|\; \mu_t, \sigma^2_{\text{p}}\right],  \\
 \mu_t &= g \left(z_{t-1},\textbf{x}'_t, \bm{\uptheta} \right), &t = 2,\dots,T, \\
-\textbf{Parameter model:} \quad \bm{\uptheta} &\sim \left[\bm{\uptheta}\right],
+\textbf{Parameter Models:} \quad \bm{\upphi} &\sim \left[\bm{\uptheta},\sigma^2_{\text{p}},\sigma^2_{\text{o}},z_{t=1} \right],
 \end{align}
 
 \noindent{}where $y_t$ is the observed state at time *t*, $z_t$ is the latent state at time *t*, $\mu_t$ is the determinstic prediction of *z* at time *t* from the process model *g*, which is a function of *z* at time *t-1*, a vector of covariates (**x**) at time *t*, and a set of unknown parameters, $\bm{\uptheta}$.
 $\sigma^2_{\text{o}}$ is observation error and $\sigma^2_{\text{p}}$ is process error.
-The notation $\left[a \;|\; b, c\right]$ reads, "the probability of *a* given *b* and *c*," and $\left[\bm{\uptheta}\right]$ refers to the prior probability distributions for all parameters in the parameter vector, $\bm{\uptheta}$.
+The notation $\left[a \;|\; b, c\right]$ reads, "the probability of *a* given *b* and *c*" [@Gelfand1990], and $\bm{\upphi}$ refers to the prior probability distributions for all unknown parameters and the initial conditions for the latent state, $z_{t=1}$.
 
 For our purposes, we are interested in the probability distributions of the true state **z** at future points in time, conditional on previous observations (**y**).
-This is referred to as the forecast distribution or the predictive process distribution [@Hobbs2015], which, for one time step ahead of the final observation ($T+1$), is defined as
+This is referred to as the forecast distribution or the predictive process distribution [@Hobbs2015, pp. 199-200], which, for one time step ahead of the final observation ($T+1$), is defined as
 
 \begin{equation}
 \begin{gathered}
-\left[z_{T+1} | y_1,\dots,y_T \right] = \int \dots \int \left[z_{T+1} | z_T,\bm{\uptheta} \right] \\ \left[z_1,\dots,z_T,\bm{\uptheta} | y_1,\dots,y_T \right] d\bm{\uptheta} dz_1 \dots dz_T.
+\left[z_{T+1} | y_1,\dots,y_T \right] = \int \int \dots \int \left[z_{T+1} | z_T,\bm{\uptheta}, \sigma^2_{\text{p}} \right] \\ \times \left[z_1,\dots,z_T,\bm{\uptheta}, \sigma^2_{\text{p}} | y_1,\dots,y_T \right] d\bm{\uptheta} d\sigma^2_{\text{p}} dz_1 \dots dz_T.
 \end{gathered}
 \end{equation}
 
@@ -132,6 +134,8 @@ This type of model is easily fit using Bayesian methods and Markov chain Monte c
 The posterior distribution of all unkowns, including states and parameters, is estimated over *K* MCMC iterations.
 
 ![ Forecasts can be made using (A) a point estimate of the median of the latent state *z*, $\bar{z}_{(t)}$, as a starting value or (B) using the full distribution of *z*, $[z_{(t)}]$. In both panels, the small points are the estimates of *z* at time *t* from each of 1000 MCMC iterations, the boxplots show the distribution, and the large point shows the median. The scenario in A represents the case where initial conditions uncertainty is set to zero. Comparing the variance of forecasts made under scenarios A and B allows us to quantify the amount of uncertainty attributable to initial conditions. ](../figures/init_cond_example.pdf){ height=2in }
+
+# Application: Yellowstone Bison Population
 
 
 # References
