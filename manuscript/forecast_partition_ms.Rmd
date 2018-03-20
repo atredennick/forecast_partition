@@ -99,6 +99,20 @@ Therefore, progress in quantifying and partioning forecast uncertainty requires 
 
 ![ Example of forecast uncertainty with different sources of error set to zero. Each line represents one realization, out of 200, from an order-one autoregressive model (AR1 process). Contrary to the analytical expression (Eq. 2), initial conditions uncertainty and parameter uncertainty clearly interact. The spread of lines in (A) is not wholly because of initial conditions uncertainty (B) or parameter uncertainty (C), it is their combined influence that causes the spread of realizations in (A). At least in this example, process error (D) does appear to be independent, but we used a small value of process error to highlight other interactions. Source code: `generate_forecast_fxns.R`. ](../figures/forecast_uncertainty_example.pdf)
 
+# A Brief History of Partioning Forecast Uncertainty
+
+##  Weather forecasting
+
+Chaos.
+
+##  Earth system models
+
+Carbon.
+
+##  Dynamical models
+
+Lotka-Volterra.
+
 # A Simulation-Based Approach for Partitioning Forecast Uncertainty
 
 Analytical expressions of forecast uncertainty must rely on simplifying assumptions.

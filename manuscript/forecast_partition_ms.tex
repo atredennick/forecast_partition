@@ -95,14 +95,15 @@ to improve ecological forecasts}
 \begin{document}
 \maketitle
 
-\setlength{\abovedisplayskip}{0pt} \raggedright
+\setlength{\abovedisplayskip}{0pt}\raggedright
 
 \(^1\) Department of Wildland Resources and the Ecology Center, Utah
 State University, Logan, UT, United States
 
 \(^2\) Department of somewhere
 
-\section{Abstract}\label{abstract}
+\hypertarget{abstract}{%
+\section{Abstract}\label{abstract}}
 
 Making informed ecosystem management decisions in the face of rapid
 environmental change requires forecasts from models of ecological
@@ -134,7 +135,8 @@ state-space models to employ our approach in their own research.
 \emph{Keywords: Bayesian state-space model, forecast, Markov chain Monte
 Carlo, prediction, population model, uncertainty, Yellowstone bison}
 
-\section{Introduction}\label{introduction}
+\hypertarget{introduction}{%
+\section{Introduction}\label{introduction}}
 
 A fundamental challenge facing society is to predict the ecological
 impacts of global environmental changes such as nitrogen deposition,
@@ -232,8 +234,28 @@ highlight other interactions. Source code:
 \texttt{generate\_forecast\_fxns.R}.}
 \end{figure}
 
+\hypertarget{a-brief-history-of-partioning-forecast-uncertainty}{%
+\section{A Brief History of Partioning Forecast
+Uncertainty}\label{a-brief-history-of-partioning-forecast-uncertainty}}
+
+\hypertarget{weather-forecasting}{%
+\subsection{Weather forecasting}\label{weather-forecasting}}
+
+Chaos.
+
+\hypertarget{earth-system-models}{%
+\subsection{Earth system models}\label{earth-system-models}}
+
+Carbon.
+
+\hypertarget{dynamical-models}{%
+\subsection{Dynamical models}\label{dynamical-models}}
+
+Lotka-Volterra.
+
+\hypertarget{a-simulation-based-approach-for-partitioning-forecast-uncertainty}{%
 \section{A Simulation-Based Approach for Partitioning Forecast
-Uncertainty}\label{a-simulation-based-approach-for-partitioning-forecast-uncertainty}
+Uncertainty}\label{a-simulation-based-approach-for-partitioning-forecast-uncertainty}}
 
 Analytical expressions of forecast uncertainty must rely on simplifying
 assumptions. Two important assumptions are (1) that different sources of
@@ -289,7 +311,7 @@ MCMC iterations.
 
 \begin{figure}
 \centering
-\includegraphics[height=2.00000in]{../figures/init_cond_example.pdf}
+\includegraphics[width=\textwidth,height=2in]{../figures/init_cond_example.pdf}
 \caption{Forecasts can be made using (A) a point estimate of the median
 of the latent state \emph{z}, \(\bar{z}_{(t)}\), as a starting value or
 (B) using the full distribution of \emph{z}, \([z_{(t)}]\). In both
@@ -301,34 +323,36 @@ variance of forecasts made under scenarios A and B allows us to quantify
 the amount of uncertainty attributable to initial conditions.}
 \end{figure}
 
+\hypertarget{application-yellowstone-bison-population}{%
 \section{Application: Yellowstone Bison
-Population}\label{application-yellowstone-bison-population}
+Population}\label{application-yellowstone-bison-population}}
 
-\section*{References}\label{references}
+\hypertarget{references}{%
+\section*{References}\label{references}}
 \addcontentsline{toc}{section}{References}
 
 \hypertarget{refs}{}
-\hypertarget{ref-Bauer2015}{}
+\leavevmode\hypertarget{ref-Bauer2015}{}%
 Bauer, P., A. Thorpe, and G. Brunet. 2015. The quiet revolution of
 numerical weather prediction. Nature 525:47--55.
 
-\hypertarget{ref-Cariboni2007}{}
+\leavevmode\hypertarget{ref-Cariboni2007}{}%
 Cariboni, J., D. Gatelli, R. Liska, and A. Saltelli. 2007. The role of
 sensitivity analysis in ecological modelling. Ecological Modelling
 203:167--182.
 
-\hypertarget{ref-Clark2001}{}
+\leavevmode\hypertarget{ref-Clark2001}{}%
 Clark, J. S., S. R. Carpenter, M. Barber, S. Collins, A. Dobson, J. A.
 Foley, D. M. Lodge, M. Pascual, R. Pielke, W. Pizer, C. Pringle, W. V.
 Reid, K. A. Rose, O. Sala, W. H. Schlesinger, D. H. Wall, and D. Wear.
 2001. Ecological forecasts: an emerging imperative. Science
 293:657--660.
 
-\hypertarget{ref-Dietze2017a}{}
+\leavevmode\hypertarget{ref-Dietze2017a}{}%
 Dietze, M. C. 2017. Prediction in ecology: A first-principles framework.
 Ecological Applications 27:2048--2060.
 
-\hypertarget{ref-Dietze2018}{}
+\leavevmode\hypertarget{ref-Dietze2018}{}%
 Dietze, M. C., A. Fox, L. M. Beck-Johnson, J. L. Betancourt, M. B.
 Hooten, C. S. Jarnevich, T. H. Keitt, M. A. Kenney, C. M. Laney, L. G.
 Larsen, H. W. Loescher, C. K. Lunch, B. C. Pijanowski, J. T. Randerson,
@@ -337,20 +361,20 @@ White. 2018. Iterative near-term ecological forecasting: Needs,
 opportunities, and challenges. Proceedings of the National Academy of
 Sciences 115:1424--1432.
 
-\hypertarget{ref-Gelfand1990}{}
+\leavevmode\hypertarget{ref-Gelfand1990}{}%
 Gelfand, A. E., and A. F. Smith. 1990. Sampling-based approaches to
 calculating marginal densities. Journal of the American Statistical
 Association 85:398--409.
 
-\hypertarget{ref-Hobbs2015}{}
+\leavevmode\hypertarget{ref-Hobbs2015}{}%
 Hobbs, N. T., and M. B. Hooten. 2015. Bayesian Models: A Statistical
 Primer for Ecologists. Princeton University Press, Princeton.
 
-\hypertarget{ref-Sobol1993}{}
+\leavevmode\hypertarget{ref-Sobol1993}{}%
 Sobol', I. 1993. Sensitivity Estimates for Nonlinear Mathematical
 Models.
 
-\hypertarget{ref-Steffen2015}{}
+\leavevmode\hypertarget{ref-Steffen2015}{}%
 Steffen, W., K. Richardson, J. Rockström, S. Cornell, I. Fetzer, E.
 Bennett, R. Biggs, and S. Carpenter. 2015. Planetary boundaries: Guiding
 human development on a changing planet. Science 348:1217.
