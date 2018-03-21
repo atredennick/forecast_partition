@@ -99,11 +99,14 @@ Therefore, progress in quantifying and partioning forecast uncertainty requires 
 
 ![ Example of forecast uncertainty with different sources of error set to zero. Each line represents one realization, out of 200, from an order-one autoregressive model (AR1 process). Contrary to the analytical expression (Eq. 2), initial conditions uncertainty and parameter uncertainty clearly interact. The spread of lines in (A) is not wholly because of initial conditions uncertainty (B) or parameter uncertainty (C), it is their combined influence that causes the spread of realizations in (A). At least in this example, process error (D) does appear to be independent, but we used a small value of process error to highlight other interactions. Source code: `generate_forecast_fxns.R`. ](../figures/forecast_uncertainty_example.pdf)
 
-# A Brief History of Partitioning Forecast Uncertainty
+# A Brief History of Quantifying and Partitioning Forecast Uncertainty
 
 ##  Error propagation
 
-Lo paper, etc.
+Methods for quantifying and partitioning forecast uncertainty all share common roots in statistical error propagation.
+Error propagation is concerned with translating the effects of variable (or parameter) uncertainty into the uncertainty of a function based those variables.
+That is, for some function $f(\bm{\beta},\textbf{x})$, we are interested in the variance of *f* given the variance of model parameters ($\bm{\beta}$) and variable inputs (**x**).
+
 
 ##  Weather forecasting
 

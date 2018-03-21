@@ -191,6 +191,105 @@ ggplot(outcasts_combined, aes(x = year, y = value, group = key))+
   xlab("Forecast year")+
   theme_few()+
   theme(axis.text.y = element_blank())
-ggsave(filename = "../figures/forecast_uncertainty_example.pdf", width = 8.5, height = 3, units = "in")
-  
+# ggsave(filename = "../figures/forecast_uncertainty_example.pdf", width = 8.5, height = 3, units = "in")
 
+
+
+####
+####  TEST CASE OF ANOVA WITH 2 SOURCES OF ERROR ONLY --------------------------
+####
+z_bar <- -20
+z_sigma <- 1.5
+a_bar <- 0.8
+a_sigma <- 0.1
+proc_sigma <- 0
+n_times <- 10
+n_iters <- 100
+seed <- 126
+
+outcasts_all <- generate_forecast(z_bar,
+                                  z_sigma, 
+                                  a_bar,
+                                  a_sigma,
+                                  theta_bar = NULL, 
+                                  theta_sigma = NULL, 
+                                  x_bar = NULL, 
+                                  x_sigma = NULL, 
+                                  proc_sigma, 
+                                  n_times, 
+                                  n_iters,
+                                  seed)
+
+outcasts_noinit <- generate_forecast(z_bar,
+                                     z_sigma = 0, 
+                                     a_bar,
+                                     a_sigma,
+                                     theta_bar = NULL, 
+                                     theta_sigma = NULL, 
+                                     x_bar = NULL, 
+                                     x_sigma = NULL, 
+                                     proc_sigma, 
+                                     n_times, 
+                                     n_iters,
+                                     seed)
+
+outcasts_noparam <- generate_forecast(z_bar,
+                                      z_sigma, 
+                                      a_bar,
+                                      a_sigma = 0,
+                                      theta_bar = NULL, 
+                                      theta_sigma = NULL, 
+                                      x_bar = NULL, 
+                                      x_sigma = NULL, 
+                                      proc_sigma, 
+                                      n_times, 
+                                      n_iters,
+                                      seed)
+
+outcasts_combined <- as.data.frame(outcasts_all) %>%
+  mutate(year = 0:n_times) %>%
+  gather(key,value,-year) %>%
+  mutate(simulation = "all") %>%
+  rbind(as.data.frame(outcasts_noinit) %>%
+          mutate(year = 0:n_times) %>%
+          gather(key,value,-year) %>%
+          mutate(simulation = "noinit")) %>%
+  rbind(as.data.frame(outcasts_noparam) %>%
+          mutate(year = 0:n_times) %>%
+          gather(key,value,-year) %>%
+          mutate(simulation = "noparam"))
+
+ggplot(outcasts_combined, aes(x = year, y = value, group = key))+
+  geom_line(color = "darkgrey", alpha = 0.8)+
+  facet_wrap(~simulation, ncol = 4)+
+  scale_x_continuous(breaks = c(0,2,4,6,8,10))+
+  ylab("State of interest")+
+  xlab("Forecast year")+
+  theme_few()+
+  theme(axis.text.y = element_blank())
+
+##  Calculate variance
+forecast_var <- outcasts_combined %>%
+  group_by(year, simulation) %>%
+  summarise(variance = var(value)) %>%
+  spread(simulation, variance) %>%
+  mutate(interaction = noinit + noparam) %>%
+  gather(simulation, variance, -year)
+
+ggplot(forecast_var, aes(x = year, y = variance, color = simulation))+
+  geom_line()+
+  xlab("Forecast year")+
+  ylab("Forecast variance")+
+  scale_color_colorblind(name = NULL, labels = c("All sources","IC + Param. Error","Param Error","IC Error"))+
+  scale_x_continuous(breaks = c(0,2,4,6,8,10))+
+  theme_few()+
+  theme(legend.position = c(0,1),
+        legend.justification=c(-0.1, 1.1))
+
+interaction_var <- forecast_var %>%
+  spread(simulation, variance) %>%
+  mutate(interaction_effect = all - interaction)
+
+ggplot(interaction_var, aes(x = year, y = interaction_effect))+
+  geom_line()
+  
