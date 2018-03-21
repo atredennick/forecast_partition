@@ -276,8 +276,12 @@ forecast_var <- outcasts_combined %>%
   mutate(interaction = noinit + noparam) %>%
   gather(simulation, variance, -year)
 
-ggplot(forecast_var, aes(x = year, y = variance, color = simulation))+
-  geom_line()+
+ggplot(forecast_var, aes(x = year, y = variance))+
+  geom_ribbon(aes(ymax = forecast_var[forecast_var$simulation=="all","variance"],
+                  ymin = forecast_var[forecast_var$simulation=="interaction","variance"]),
+              fill = "grey88")+
+  geom_line(aes(color = simulation), size = 1.3)+
+  annotate("text", x = 8, y = 30, label = "Interaction effect")+
   xlab("Forecast year")+
   ylab("Forecast variance")+
   scale_color_colorblind(name = NULL, labels = c("All sources","IC + Param. Error","Param Error","IC Error"))+
@@ -285,6 +289,7 @@ ggplot(forecast_var, aes(x = year, y = variance, color = simulation))+
   theme_few()+
   theme(legend.position = c(0,1),
         legend.justification=c(-0.1, 1.1))
+ggsave(filename = "../figures/example_interaction_effect.pdf", width = 4.5, height = 4, units = "in")
 
 interaction_var <- forecast_var %>%
   spread(simulation, variance) %>%
