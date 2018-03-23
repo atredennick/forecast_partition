@@ -105,8 +105,15 @@ Therefore, progress in quantifying and partioning forecast uncertainty requires 
 
 Methods for quantifying and partitioning forecast uncertainty all share common roots in statistical error propagation.
 Error propagation is concerned with translating the effects of variable (or parameter) uncertainty into the uncertainty of a function based those variables.
-That is, for some function $f(\bm{\beta},\textbf{x})$, we are interested in the variance of *f* given the variance of model parameters ($\bm{\beta}$) and variable inputs (**x**).
+That is, for the output *q* of some function $q = f(x_1,x_2,\dots,x_n)$, we are interested in the variance of *q* given the variance of input variables (**x**).
+It is this generic model formulation that leads to the canonical expression of error propagation
 
+\begin{align}
+\sigma^2_q &= \left( \frac{\delta q}{\delta x_1} \sigma_{x_1} \right)^2 + \left( \frac{\delta q}{\delta x_2} \sigma_{x_2} \right)^2 + \cdots + \left( \frac{\delta q}{\delta x_n} \sigma_{x_n} \right)^2 \\
+&= \sum^n_{i=1}\left( \frac{\delta q}{\delta x_i} \sigma_{x_i} \right)^2.
+\end{align}
+
+This expression states that the variance of the output of function $q$ ($\sigma^2_q$) is equal to the sum of squares of the input variables weighted by the sensitivity of the output variable to each input variable, quantified as the partial derivative.
 
 ##  Weather forecasting
 
