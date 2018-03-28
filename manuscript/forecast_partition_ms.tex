@@ -95,15 +95,14 @@ to improve ecological forecasts}
 \begin{document}
 \maketitle
 
-\setlength{\abovedisplayskip}{0pt}\raggedright
+\setlength{\abovedisplayskip}{0pt} \raggedright
 
 \(^1\) Department of Wildland Resources and the Ecology Center, Utah
 State University, Logan, UT, United States
 
 \(^2\) Department of somewhere
 
-\hypertarget{abstract}{%
-\section{Abstract}\label{abstract}}
+\section{Abstract}\label{abstract}
 
 Making informed ecosystem management decisions in the face of rapid
 environmental change requires forecasts from models of ecological
@@ -135,8 +134,7 @@ state-space models to employ our approach in their own research.
 \emph{Keywords: Bayesian state-space model, forecast, Markov chain Monte
 Carlo, prediction, population model, uncertainty, Yellowstone bison}
 
-\hypertarget{introduction}{%
-\section{Introduction}\label{introduction}}
+\section{Introduction}\label{introduction}
 
 A fundamental challenge facing society is to predict the ecological
 impacts of global environmental changes such as nitrogen deposition,
@@ -234,12 +232,10 @@ highlight other interactions. Source code:
 \texttt{generate\_forecast\_fxns.R}.}
 \end{figure}
 
-\hypertarget{a-brief-history-of-quantifying-and-partitioning-forecast-uncertainty}{%
 \section{A Brief History of Quantifying and Partitioning Forecast
-Uncertainty}\label{a-brief-history-of-quantifying-and-partitioning-forecast-uncertainty}}
+Uncertainty}\label{a-brief-history-of-quantifying-and-partitioning-forecast-uncertainty}
 
-\hypertarget{error-propagation}{%
-\subsection{Error propagation}\label{error-propagation}}
+\subsection{Error propagation}\label{error-propagation}
 
 Methods for quantifying and partitioning forecast uncertainty all share
 common roots in statistical error propagation. Error propagation is
@@ -249,24 +245,20 @@ That is, for some function \(f(\bm{\beta},\textbf{x})\), we are
 interested in the variance of \emph{f} given the variance of model
 parameters (\(\bm{\beta}\)) and variable inputs (\textbf{x}).
 
-\hypertarget{weather-forecasting}{%
-\subsection{Weather forecasting}\label{weather-forecasting}}
+\subsection{Weather forecasting}\label{weather-forecasting}
 
 Chaos.
 
-\hypertarget{earth-system-models}{%
-\subsection{Earth system models}\label{earth-system-models}}
+\subsection{Earth system models}\label{earth-system-models}
 
 Carbon.
 
-\hypertarget{dynamical-models}{%
-\subsection{Dynamical models}\label{dynamical-models}}
+\subsection{Dynamical models}\label{dynamical-models}
 
 Lotka-Volterra.
 
-\hypertarget{a-simulation-based-approach-for-partitioning-forecast-uncertainty}{%
 \section{A Simulation-Based Approach for Partitioning Forecast
-Uncertainty}\label{a-simulation-based-approach-for-partitioning-forecast-uncertainty}}
+Uncertainty}\label{a-simulation-based-approach-for-partitioning-forecast-uncertainty}
 
 Analytical expressions of forecast uncertainty must rely on simplifying
 assumptions. Two important assumptions are (1) that different sources of
@@ -283,12 +275,14 @@ sources of uncertainty.
 
 As a starting point, consider a generic Bayesian state-space model
 
-\begin{align}
-\textbf{Data Model:} \quad y_t &\sim \left[y_t \;|\; z_t, \sigma^2_{\text{o}}\right], &t = 1,\dots,T, \\
-\textbf{Process Models:} \quad z_t &\sim \left[z_t \;|\; \mu_t, \sigma^2_{\text{p}}\right],  \\
-\mu_t &= g \left(z_{t-1},\textbf{x}'_t, \bm{\uptheta} \right), &t = 2,\dots,T, \\
+\begin{equation}
+\begin{aligned}[b]
+\textbf{Data Model:} \quad y_t &\sim \left[y_t \;|\; z_t, \sigma^2_{\text{o}}\right], &t = 1,\dots,T, \\ 
+\textbf{Process Models:} \quad z_t &\sim \left[z_t \;|\; \mu_t, \sigma^2_{\text{p}}\right],  \\ 
+\mu_t &= g \left(z_{t-1},\textbf{x}'_t, \bm{\uptheta} \right), &t = 2,\dots,T, \\ 
 \textbf{Parameter Models:} \quad \bm{\upphi} &\sim \left[\bm{\uptheta},\sigma^2_{\text{p}},\sigma^2_{\text{o}},z_{t=1} \right],
-\end{align}
+\end{aligned}
+\end{equation}
 
 \noindent{}where \(y_t\) is the observed state at time \emph{t}, \(z_t\)
 is the latent state at time \emph{t}, \(\mu_t\) is the determinstic
@@ -315,55 +309,64 @@ observation (\(T+1\)), is defined as
 \end{gathered}
 \end{equation}
 
-This type of model is easily fit using Bayesian methods and Markov chain
-Monte carlo (MCMC) algorithms. The posterior distribution of all
-unkowns, including states and parameters, is estimated over \emph{K}
-MCMC iterations.
+The model in Eq. 3 is easily fit using a Markov chain Monte carlo (MCMC)
+algorithm, which also makes calculating the forecast distribution a
+relatively simple task. To obtain
+\(\left[z_{T+1} | y_1,\dots,y_T \right]\), we can change the indexing of
+\emph{t} in Eq. 3 to \(t = 2,\dots,T+1\) and then sample
+\(z_{T+1}^{(k)}\) from
+\(\left[z_{T+1} | g(z_T^{(k)},\bm{\uptheta}^{(k)}), \sigma^{2(k)}_{\text{p}} \right]\)
+given the current values for \(\bm{\uptheta}^{(k)}\) and \(z_{T}^{(k)}\)
+on each \(k = 1,\dots,K\) iteration of the MCMC (Hobbs and Hooten 2015,
+Williams et al. 2018). Making forecasts further into the future than
+\(T+1\) requires extending \(T+1\) to \(T+2,\dots,T+q\) and iteratively
+sampling
+\(\left[z_{T+q} | g(z_{T+q-1}^{(k)},\bm{\uptheta}^{(k)}), \sigma^{2(k)}_{\text{p}} \right]\)
+(Hobbs and Hooten 2015).
 
-\begin{figure}
-\centering
-\includegraphics[width=\textwidth,height=2in]{../figures/init_cond_example.pdf}
-\caption{Forecasts can be made using (A) a point estimate of the median
-of the latent state \emph{z}, \(\bar{z}_{(t)}\), as a starting value or
-(B) using the full distribution of \emph{z}, \([z_{(t)}]\). In both
-panels, the small points are the estimates of \emph{z} at time \emph{t}
-from each of 1000 MCMC iterations, the boxplots show the distribution,
-and the large point shows the median. The scenario in A represents the
-case where initial conditions uncertainty is set to zero. Comparing the
-variance of forecasts made under scenarios A and B allows us to quantify
-the amount of uncertainty attributable to initial conditions.}
-\end{figure}
+The forecast distribution (Eq. 4) has all of the quantities that
+contribute to forecast uncertainty by incorporating their uncertainty
+explicitly across the \emph{K} MCMC iterations. For example, initial
+conditions uncertainty is incorporated because \(z_{T+q}^{(k)}\) is a
+function of \(z_{T+q-1}^{(k)}\), resulting in a total of \emph{K} point
+forecasts for \emph{z}. If we wish to ignore initial conditions
+uncertainty, we can make all \emph{K} point forecasts using the mean of
+\(z_{T+q-1}\)
 
-\hypertarget{application-yellowstone-bison-population}{%
+\begin{equation}
+z_{T+q-1}^{(*)} = E(z_{T+q-1} | y_1,\dots,y_T) \approx \frac{\sum^K_{k=1} z_{T+q-1}^{(k)}}{K},
+\end{equation}
+
+which we call \(z^{(*)}\) (as opposed to \(z^{(k)})\).
+
 \section{Application: Yellowstone Bison
-Population}\label{application-yellowstone-bison-population}}
+Population}\label{application-yellowstone-bison-population}
 
-\hypertarget{references}{%
-\section*{References}\label{references}}
+\section*{References}\label{references}
 \addcontentsline{toc}{section}{References}
 
 \hypertarget{refs}{}
-\leavevmode\hypertarget{ref-Bauer2015}{}%
+\hypertarget{ref-Bauer2015}{}
 Bauer, P., A. Thorpe, and G. Brunet. 2015. The quiet revolution of
 numerical weather prediction. Nature 525:47--55.
 
-\leavevmode\hypertarget{ref-Cariboni2007}{}%
+\hypertarget{ref-Cariboni2007}{}
 Cariboni, J., D. Gatelli, R. Liska, and A. Saltelli. 2007. The role of
 sensitivity analysis in ecological modelling. Ecological Modelling
 203:167--182.
 
-\leavevmode\hypertarget{ref-Clark2001}{}%
+\hypertarget{ref-Clark2001}{}
 Clark, J. S., S. R. Carpenter, M. Barber, S. Collins, A. Dobson, J. A.
 Foley, D. M. Lodge, M. Pascual, R. Pielke, W. Pizer, C. Pringle, W. V.
 Reid, K. A. Rose, O. Sala, W. H. Schlesinger, D. H. Wall, and D. Wear.
 2001. Ecological forecasts: an emerging imperative. Science
 293:657--660.
 
-\leavevmode\hypertarget{ref-Dietze2017a}{}%
+\hypertarget{ref-Dietze2017a}{}
 Dietze, M. C. 2017. Prediction in ecology: A first-principles framework.
 Ecological Applications 27:2048--2060.
 
-\leavevmode\hypertarget{ref-Dietze2018}{}%
+\hypertarget{ref-Dietze2018}{}
 Dietze, M. C., A. Fox, L. M. Beck-Johnson, J. L. Betancourt, M. B.
 Hooten, C. S. Jarnevich, T. H. Keitt, M. A. Kenney, C. M. Laney, L. G.
 Larsen, H. W. Loescher, C. K. Lunch, B. C. Pijanowski, J. T. Randerson,
@@ -372,23 +375,28 @@ White. 2018. Iterative near-term ecological forecasting: Needs,
 opportunities, and challenges. Proceedings of the National Academy of
 Sciences 115:1424--1432.
 
-\leavevmode\hypertarget{ref-Gelfand1990}{}%
+\hypertarget{ref-Gelfand1990}{}
 Gelfand, A. E., and A. F. Smith. 1990. Sampling-based approaches to
 calculating marginal densities. Journal of the American Statistical
 Association 85:398--409.
 
-\leavevmode\hypertarget{ref-Hobbs2015}{}%
+\hypertarget{ref-Hobbs2015}{}
 Hobbs, N. T., and M. B. Hooten. 2015. Bayesian Models: A Statistical
 Primer for Ecologists. Princeton University Press, Princeton.
 
-\leavevmode\hypertarget{ref-Sobol1993}{}%
+\hypertarget{ref-Sobol1993}{}
 Sobol', I. 1993. Sensitivity Estimates for Nonlinear Mathematical
 Models.
 
-\leavevmode\hypertarget{ref-Steffen2015}{}%
+\hypertarget{ref-Steffen2015}{}
 Steffen, W., K. Richardson, J. Rockström, S. Cornell, I. Fetzer, E.
 Bennett, R. Biggs, and S. Carpenter. 2015. Planetary boundaries: Guiding
 human development on a changing planet. Science 348:1217.
+
+\hypertarget{ref-Williams2018}{}
+Williams, P. J., M. B. Hooten, J. N. Womble, G. G. Esslinger, and M. R.
+Bower. 2018. Monitoring dynamic spatio‐temporal ecological processes
+optimally. Ecology 99:524--535.
 
 
 \end{document}

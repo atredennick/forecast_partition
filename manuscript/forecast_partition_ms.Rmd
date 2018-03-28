@@ -131,12 +131,14 @@ Here we test the general idea using simulated data and extend the approach to co
 
 As a starting point, consider a generic Bayesian state-space model
 
-\begin{align}
-\textbf{Data Model:} \quad y_t &\sim \left[y_t \;|\; z_t, \sigma^2_{\text{o}}\right], &t = 1,\dots,T, \\
-\textbf{Process Models:} \quad z_t &\sim \left[z_t \;|\; \mu_t, \sigma^2_{\text{p}}\right],  \\
-\mu_t &= g \left(z_{t-1},\textbf{x}'_t, \bm{\uptheta} \right), &t = 2,\dots,T, \\
+\begin{equation}
+\begin{aligned}[b]
+\textbf{Data Model:} \quad y_t &\sim \left[y_t \;|\; z_t, \sigma^2_{\text{o}}\right], &t = 1,\dots,T, \\ 
+\textbf{Process Models:} \quad z_t &\sim \left[z_t \;|\; \mu_t, \sigma^2_{\text{p}}\right],  \\ 
+\mu_t &= g \left(z_{t-1},\textbf{x}'_t, \bm{\uptheta} \right), &t = 2,\dots,T, \\ 
 \textbf{Parameter Models:} \quad \bm{\upphi} &\sim \left[\bm{\uptheta},\sigma^2_{\text{p}},\sigma^2_{\text{o}},z_{t=1} \right],
-\end{align}
+\end{aligned}
+\end{equation}
 
 \noindent{}where $y_t$ is the observed state at time *t*, $z_t$ is the latent state at time *t*, $\mu_t$ is the determinstic prediction of *z* at time *t* from the process model *g*, which is a function of *z* at time *t-1*, a vector of covariates (**x**) at time *t*, and a set of unknown parameters, $\bm{\uptheta}$.
 $\sigma^2_{\text{o}}$ is observation error and $\sigma^2_{\text{p}}$ is process error.
@@ -151,10 +153,21 @@ This is referred to as the forecast distribution or the predictive process distr
 \end{gathered}
 \end{equation}
 
-This type of model is easily fit using Bayesian methods and Markov chain Monte carlo (MCMC) algorithms.
-The posterior distribution of all unkowns, including states and parameters, is estimated over *K* MCMC iterations.
+The model in Eq. 3 is easily fit using a Markov chain Monte carlo (MCMC) algorithm, which also makes calculating the forecast distribution a relatively simple task.
+To obtain $\left[z_{T+1} | y_1,\dots,y_T \right]$, we can change the indexing of *t* in Eq. 3 to $t = 2,\dots,T+1$ and then sample $z_{T+1}^{(k)}$ from $\left[z_{T+1} | g(z_T^{(k)},\bm{\uptheta}^{(k)}), \sigma^{2(k)}_{\text{p}} \right]$ given the current values for $\bm{\uptheta}^{(k)}$ and $z_{T}^{(k)}$ on each $k = 1,\dots,K$ iteration of the MCMC [@Hobbs2015; @Williams2018].
+Making forecasts further into the future than $T+1$ requires extending $T+1$ to $T+2,\dots,T+q$ and iteratively sampling $\left[z_{T+q} | g(z_{T+q-1}^{(k)},\bm{\uptheta}^{(k)}), \sigma^{2(k)}_{\text{p}} \right]$ [@Hobbs2015].
 
-![ Forecasts can be made using (A) a point estimate of the median of the latent state *z*, $\bar{z}_{(t)}$, as a starting value or (B) using the full distribution of *z*, $[z_{(t)}]$. In both panels, the small points are the estimates of *z* at time *t* from each of 1000 MCMC iterations, the boxplots show the distribution, and the large point shows the median. The scenario in A represents the case where initial conditions uncertainty is set to zero. Comparing the variance of forecasts made under scenarios A and B allows us to quantify the amount of uncertainty attributable to initial conditions. ](../figures/init_cond_example.pdf){ height=2in }
+The forecast distribution (Eq. 4) has all of the quantities that contribute to forecast uncertainty by incorporating their uncertainty explicitly across the *K* MCMC iterations.
+For example, initial conditions uncertainty is incorporated because $z_{T+q}^{(k)}$ is a function of $z_{T+q-1}^{(k)}$, resulting in a total of *K* point forecasts for *z*.
+If we wish to ignore initial conditions uncertainty, we can make all *K* point forecasts using the mean of  $z_{T+q-1}$
+
+\begin{equation}
+z_{T+q-1}^{(*)} = E(z_{T+q-1} | y_1,\dots,y_T) \approx \frac{\sum^K_{k=1} z_{T+q-1}^{(k)}}{K},
+\end{equation}
+
+which we call $z^{(*)}$ (as opposed to $z^{(k)})$.
+
+<!-- ![ Forecasts can be made using (A) a point estimate of the median of the latent state *z*, $\bar{z}_{(t)}$, as a starting value or (B) using the full distribution of *z*, $[z_{(t)}]$. In both panels, the small points are the estimates of *z* at time *t* from each of 1000 MCMC iterations, the boxplots show the distribution, and the large point shows the median. The scenario in A represents the case where initial conditions uncertainty is set to zero. Comparing the variance of forecasts made under scenarios A and B allows us to quantify the amount of uncertainty attributable to initial conditions. ](../figures/init_cond_example.pdf){ height=2in } -->
 
 # Application: Yellowstone Bison Population
 
