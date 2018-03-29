@@ -92,6 +92,11 @@ to improve forecasts of dynamic processes}
 \doublespacing
 \usepackage{lineno}
 \linenumbers
+\usepackage{floatrow}
+\newcounter{box}
+\newcommand{\boxnumber}{\addtocounter{box}{1} \thebox \thinspace}
+\floatstyle{boxed}
+\newfloat{Box}{tbph}{box}
 
 \begin{document}
 \maketitle
@@ -382,8 +387,8 @@ implement,
 \(\sigma^{2}_{\text{p}} = 0\) in the case of no process uncertainty (Eq.
 10).
 
-It is important to note here that although we have been discussing these
-obtaining forecasts distributions using the MCMC algorithm used to fit
+It is important to note that although our discussion has centered on
+obtaining forecast distributions within the MCMC algorithm used to fit
 the model, it is only feasible to do this for the full forecast
 distribution (Eq. 6). In all other cases, where states or parameters
 must be averaged over the \emph{K} MCMC iterations, forecast simulations

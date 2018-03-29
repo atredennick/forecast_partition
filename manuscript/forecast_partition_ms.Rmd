@@ -17,6 +17,11 @@ header-includes:
 - \doublespacing
 - \usepackage{lineno}
 - \linenumbers
+- \usepackage{floatrow}
+- \newcounter{box}
+- \newcommand{\boxnumber}{\addtocounter{box}{1} \thebox \thinspace}
+- \floatstyle{boxed}
+- \newfloat{Box}{tbph}{box}
 fontsize: 12pt
 bibliography: /Users/atredenn/Dropbox/Bibliography/ecocast.bib
 ---
@@ -195,7 +200,7 @@ Eliminating initial conditions uncertainty is the only case that requires a cond
 
 \smalltodo{Need to think about diff. between including process error ($E(\sigma^2_p)$) vs. process error uncertainty ($\sigma^{2(k)}_p$).}where $\sigma^{2}_{\text{p}} = 0$ in the case of no process uncertainty (Eq. 10).
 
-It is important to note here that although we have been discussing these obtaining forecasts distributions using the MCMC algorithm used to fit the model, it is only feasible to do this for the full forecast distribution (Eq. 6).
+It is important to note that although our discussion has centered on obtaining forecast distributions within the MCMC algorithm used to fit the model, it is only feasible to do this for the full forecast distribution (Eq. 6).
 In all other cases, where states or parameters must be averaged over the *K* MCMC iterations, forecast simulations must be done *post hoc* using saved MCMC chains \smalltodo{add Box of pseudo-code?}(Box 1).
 In other words, estimating $z_1,z_2,\dots,z_T$ is done within the MCMC fitting algorithm, while estimating $z_{T+1},z_{T+2},\dots,z_{T+q}$ is done after fitting the model, but with the full MCMC output.
 
