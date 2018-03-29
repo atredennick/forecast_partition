@@ -24,7 +24,7 @@
 \usepackage[left=1in, right=1in, top=1in, bottom=1in, headheight=12pt, letterpaper]{geometry}
 \usepackage{hyperref}
 \hypersetup{unicode=true,
-            pdftitle={A simulation-based approach for quantifying and partitioning uncertainty to improve ecological forecasts},
+            pdftitle={A simulation-based approach for quantifying and partitioning uncertainty to improve forecasts of dynamic processes},
             pdfauthor={Andrew T. Tredennick\^{}\{1\}, Peter B. Adler\^{}1, and others\^{}\{2\}},
             pdfborder={0 0 0},
             breaklinks=true}
@@ -74,7 +74,7 @@
 
 \setlength{\droptitle}{-2em}
   \title{A simulation-based approach for quantifying and partitioning uncertainty
-to improve ecological forecasts}
+to improve forecasts of dynamic processes}
   \pretitle{\vspace{\droptitle}\centering\huge}
   \posttitle{\par}
   \author{Andrew T. Tredennick\(^{1}\), Peter B. Adler\(^1\), and others\(^{2}\)}
@@ -83,6 +83,7 @@ to improve ecological forecasts}
   \date{}
   \predate{}\postdate{}
 
+\usepackage[textsize=tiny,textwidth=2.1cm]{todonotes}
 \usepackage{mathptmx}
 \usepackage{upgreek}
 \usepackage{bm}
@@ -94,6 +95,10 @@ to improve ecological forecasts}
 
 \begin{document}
 \maketitle
+
+\newcommand{\smalltodo}[2][]
+    {\todo[caption={#2}, #1]
+    {\begin{spacing}{0.5}#2\end{spacing}}}
 
 \setlength{\abovedisplayskip}{0pt} \raggedright
 
@@ -125,14 +130,15 @@ limitations of previous analytical approaches. Our approach is similar
 to an Analysis of Variance, where the total variance of a forecast is
 paritioned among its constituent parts, namely initial conditions
 uncertainty, parameter uncertainty, driver uncertainty, process error,
-and their interactions. We demonstrate the approach with simulated data
-and with an empirical example using data from the Yellowstone bison
-population. We also provide functions written in the statistical
-programming language R, which will allow others using Bayesian
-state-space models to employ our approach in their own research.
+and their interactions. We apply the approach to near-term forecasts of
+the Yellowstone bison population and measles in China. We also provide
+functions written in the statistical programming language R, which will
+allow others using Bayesian state-space models to employ our approach in
+their own research.
 
 \emph{Keywords: Bayesian state-space model, forecast, Markov chain Monte
-Carlo, prediction, population model, uncertainty, Yellowstone bison}
+Carlo, measles, prediction, population model, uncertainty, Yellowstone
+bison}
 
 \section{Introduction}\label{introduction}
 
@@ -321,38 +327,104 @@ observation (\(T+1\)), is defined as
 \end{gathered}
 \end{equation}
 
-The model in Eq. 3 is easily fit using a Markov chain Monte carlo (MCMC)
-algorithm, which also makes calculating the forecast distribution a
+The model in Eq. 5 can be fit using Markov chain Monte carlo (MCMC)
+algorithms, which makes calculating the forecast distribution a
 relatively simple task. To obtain
 \(\left[z_{T+1} | y_1,\dots,y_T \right]\), we can change the indexing of
 \emph{t} in Eq. 3 to \(t = 2,\dots,T+1\) and then sample
 \(z_{T+1}^{(k)}\) from
 \(\left[z_{T+1} | g(z_T^{(k)},\bm{\uptheta}^{(k)}), \sigma^{2(k)}_{\text{p}} \right]\)
 given the current values for \(\bm{\uptheta}^{(k)}\) and \(z_{T}^{(k)}\)
-on each \(k = 1,\dots,K\) iteration of the MCMC (Hobbs and Hooten 2015,
-Williams et al. 2018). Making forecasts further into the future than
-\(T+1\) requires extending \(T+1\) to \(T+2,\dots,T+q\) and iteratively
-sampling
+on each \(k = 1,\dots,K\) iteration of the MCMC algorithm (Hobbs and
+Hooten 2015, Williams et al. 2018). Making forecasts further into the
+future than \(T+1\) requires extending \(T+1\) to \(T+2,\dots,T+q\) and
+iteratively sampling
 \(\left[z_{T+q} | g(z_{T+q-1}^{(k)},\bm{\uptheta}^{(k)}), \sigma^{2(k)}_{\text{p}} \right]\)
 (Hobbs and Hooten 2015).
 
-The forecast distribution (Eq. 4) has all of the quantities that
+The forecast distribution (Eq. 6) has all of the quantities that
 contribute to forecast uncertainty by incorporating their uncertainty
 explicitly across the \emph{K} MCMC iterations. For example, initial
-conditions uncertainty is incorporated because \(z_{T+q}^{(k)}\) is a
-function of \(z_{T+q-1}^{(k)}\), resulting in a total of \emph{K} point
-forecasts for \emph{z}. If we wish to ignore initial conditions
-uncertainty, we can make all \emph{K} point forecasts using the mean of
-\(z_{T+q-1}\)
+conditions uncertainty is incorporated because \(z_{T+1}^{(k)}\) is a
+function of \(z_{T}^{(k)}\), resulting in a total of \emph{K} point
+forecasts for \emph{z} that comprise the posterior distribution of
+\emph{z} at each time \emph{t}. If we wish to ignore initial conditions
+uncertainty, we can make all \emph{K} point forecasts starting from the
+mean of \(z_{T}\)
 
 \begin{equation}
-z_{T+q-1}^{(*)} = E(z_{T+q-1} | y_1,\dots,y_T) \approx \frac{\sum^K_{k=1} z_{T+q-1}^{(k)}}{K},
+z_{T}^{(*)} = E(z_{T} | y_1,\dots,y_T) \approx \frac{\sum^K_{k=1} z_{T}^{(k)}}{K},
 \end{equation}
 
-which we call \(z^{(*)}\) (as opposed to \(z^{(k)})\).
+which we call \(z^{(*)}_T\) (as opposed to \(z^{(k)}_T\)), while
+retaining the uncertainty around all other parameters. Our iterative
+sampling to obtain the forecast distribution then becomes a conditional
+statement,
+
+\begin{equation}
+\begin{aligned}[b]
+\textbf{No initial conditions uncert.:} \quad z_{T+q} &\sim \left[z_{T+q} | g(z_{T+q-1}^{(k)},\bm{\uptheta}^{(k)}), \sigma^{2(k)}_{\text{p}} \right], &q>1 \\
+z_{T+q} &\sim \left[z_{T+q} | g(z_{T}^{(*)},\bm{\uptheta}^{(k)}), \sigma^{2(k)}_{\text{p}} \right], &q=1.
+\end{aligned}
+\end{equation}
+
+Eliminating initial conditions uncertainty is the only case that
+requires a conditional statement, making the other scenarios (no
+parameter uncertainty and no process uncertainty) even easier to
+implement,
+
+\begin{align}
+\textbf{No parameter uncert.:} \quad z_{T+q} &\sim \left[z_{T+q} | g(z_{T+q-1}^{(k)},\bm{\uptheta}^{(*)}), \sigma^{2(k)}_{\text{p}} \right], \\
+\textbf{No process uncert.:} \quad z_{T+q} &\sim \left[z_{T+q} | g(z_{T+q-1}^{(k)},\bm{\uptheta}^{(k)}), 0 \right],
+\end{align}
+
+\smalltodo{Need to think about diff. between including process error ($E(\sigma^2_p)$) vs. process error uncertainty ($\sigma^{2(k)}_p$).}where
+\(\sigma^{2}_{\text{p}} = 0\) in the case of no process uncertainty (Eq.
+10).
+
+It is important to note here that although we have been discussing these
+obtaining forecasts distributions using the MCMC algorithm used to fit
+the model, it is only feasible to do this for the full forecast
+distribution (Eq. 6). In all other cases, where states or parameters
+must be averaged over the \emph{K} MCMC iterations, forecast simulations
+must be done \emph{post hoc} using saved MCMC chains
+\smalltodo{add Box of pseudo-code?}(Box 1). In other words, estimating
+\(z_1,z_2,\dots,z_T\) is done within the MCMC fitting algorithm, while
+estimating \(z_{T+1},z_{T+2},\dots,z_{T+q}\) is done after fitting the
+model, but with the full MCMC output.
+
+With these basics in mind, we now develop our approach for partitioning
+and quantifying uncertainty, which is similar to an Analysis of Variance
+(ANOVA). Let the variance of the forecast distribution be \(V(X)\),
+where \(X=F\) (full forecast distribution), \(I\) (no initial conditions
+uncertainty), \(PA\) (no parameter uncertainty), or \(PS\) (no process
+uncertainty). \(V(I)\), \(V(PA)\), and \(V(PS)\) are the main effects of
+each factor on the forecast distribution such that
+
+\begin{equation}
+V(F) = V(I) + V(PA) + V(PS) + V(I,PA) + V(I,PS) + V(PA,PS) + V(I,PA,PS),
+\end{equation}
+
+where the notation \(V(X,Y)\) represents the interactive effect of \(X\)
+and \(Y\). The interaction between \emph{I} and \emph{PA}, for example,
+is then
+
+\begin{equation}
+V(I,PA) = V(F) - \left[V(I) + V(PA) \right].
+\end{equation}
+
+And so on\ldots{}
 
 \section{Application: Yellowstone Bison
 Population}\label{application-yellowstone-bison-population}
+
+\section{Application: Measles in
+China}\label{application-measles-in-china}
+
+\section{Acknowledgements}\label{acknowledgements}
+
+This research was funded by National Science Foundation grant
+DEB-1353078 (awarded to PBA).
 
 \section*{References}\label{references}
 \addcontentsline{toc}{section}{References}
