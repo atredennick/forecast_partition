@@ -103,49 +103,49 @@ to improve forecasts of dynamic processes}
 
 \newcommand{\smalltodo}[2][]
     {\todo[caption={#2}, #1]
-    {\begin{spacing}{0.5}#2\end{spacing}}}
-
-\setlength{\abovedisplayskip}{0pt} \raggedright
+    {\begin{spacing}{0.5}#2\end{spacing}}}\setlength{\abovedisplayskip}{0pt}\raggedright\setlength{\parindent}{36pt}
 
 \(^1\) Department of Wildland Resources and the Ecology Center, Utah
 State University, Logan, UT, United States
 
 \(^2\) Department of somewhere
 
-\section{Abstract}\label{abstract}
+\hypertarget{abstract}{%
+\section{Abstract}\label{abstract}}
 
-Making informed ecosystem management decisions in the face of rapid
-environmental change requires forecasts from models of ecological
-processes. However, forecasts from ecological models are often
-associated with high degrees of uncertainty, making it difficult for
-such forecasts to inform decision-making processes. To make progress
-toward the goal of reliable and informative ecological forecasts, we
-need to know from where forecast uncertainty arises. Such knowledge can
-guide investment in future research that will most improve forecast
-skill. There is a rich history of analytical expressions that partition
-the variance of future dynamics, but these expressions suffer from
-necessary assumptions such as linear dynamics and small-variance
-approximations that exclude interactions. Similarly, the earth systems
-modeling community has developed methods for paritioning uncertainty of
-model projections, but these operate at a different modeling grain than
-most of ecology. Building on these approaches, we develop a
-simulation-based approach for quantifying and partitioning forecast
-uncertainty from Bayesian state-space models that overcomes the
-limitations of previous analytical approaches. Our approach is similar
-to an Analysis of Variance, where the total variance of a forecast is
-paritioned among its constituent parts, namely initial conditions
-uncertainty, parameter uncertainty, driver uncertainty, process error,
-and their interactions. We apply the approach to near-term forecasts of
-the Yellowstone bison population and measles in China. We also provide
-functions written in the statistical programming language R, which will
-allow others using Bayesian state-space models to employ our approach in
-their own research.
+Making informed decisions in the face of rapid environmental change
+requires forecasts from models of ecological processes. However,
+forecasts from ecological models are often associated with high degrees
+of uncertainty, making it difficult for such forecasts to inform
+decision-making processes. To make progress toward the goal of reliable
+and informative ecological forecasts, we need to know from where
+forecast uncertainty arises. Such knowledge can guide investment in
+future research that will most improve forecast skill. There is a rich
+history of analytical expressions that partition the variance of future
+dynamics, but these expressions suffer from necessary assumptions such
+as linear dynamics and small-variance approximations that exclude
+interactions. Similarly, the earth systems modeling community has
+developed methods for paritioning uncertainty of model projections, but
+these operate at a different modeling grain than most of ecology.
+Building on these approaches, we develop a simulation-based approach for
+quantifying and partitioning forecast uncertainty from Bayesian
+state-space models that overcomes the limitations of previous analytical
+approaches. Our approach is similar to an Analysis of Variance, where
+the total variance of a forecast is paritioned among its constituent
+parts, namely initial conditions uncertainty, parameter uncertainty,
+driver uncertainty, process error, and their interactions. We apply the
+approach to near-term forecasts of the Yellowstone bison population and
+measles in China, demonstrating the broad utility of our approach. We
+also provide functions written in the statistical programming language
+R, which will allow others using Bayesian state-space models to employ
+our approach in their own research.
 
 \emph{Keywords: Bayesian state-space model, forecast, Markov chain Monte
 Carlo, measles, prediction, population model, uncertainty, Yellowstone
 bison}
 
-\section{Introduction}\label{introduction}
+\hypertarget{introduction}{%
+\section{Introduction}\label{introduction}}
 
 A fundamental challenge facing society is to predict the ecological
 impacts of global environmental changes such as nitrogen deposition,
@@ -180,12 +180,12 @@ driver(s) (\(x\)), parameters (\(\theta\)), and process error
 y_{t+1} = f(y_t, x_t|\theta) + \epsilon_{t+1},
 \end{align}
 
-which states that \(y\) at time \(t+1\) is a function of \(y\) and \(x\)
-at time \(t\) conditional on the model parameters (\(\theta\)) plus
-process error (\(\epsilon\)). Ignoring covariance among factors and
-assuming linear dynamics, Dietze (2017), following Sobol' (1993) and
-Cariboni et al. (2007), suggests that forecast variance
-(\(Var[y_{t+1}]\)) is approximately:
+\noindent{}which states that \(y\) at time \(t+1\) is a function of
+\(y\) and \(x\) at time \(t\) conditional on the model parameters
+(\(\theta\)) plus process error (\(\epsilon\)). Ignoring covariance
+among factors and assuming linear dynamics, Dietze (2017), following
+Sobol' (1993) and Cariboni et al. (2007), suggests that forecast
+variance (\(Var[y_{t+1}]\)) is approximately:
 
 \begin{align}
 Var[y_{t+1}] \approx \underbrace{\left(\frac{\delta f}{\delta y} \right)^2}_{\text{stability}} 
@@ -197,18 +197,18 @@ Var[y_{t+1}] \approx \underbrace{\left(\frac{\delta f}{\delta y} \right)^2}_{\te
                \underbrace{\vphantom{ \left(\frac{\delta f}{\delta y} \right)^2 } Var[\epsilon_{t+1}]}_{\text{process error}},
 \end{align}
 
-where each additive term follows a pattern of \emph{sensitivity} times
-\emph{variance} and ``IC uncert.'' refers to ``\emph{I}nitial
-\emph{C}onditions uncertainty.'' The variance attributable to any
-particular factor is a function of how sensitive the model is to the
-factor and the variance of that factor. For example, the atmosphere is a
-chaotic system, meaning its dynamics are internally unstable and
-sensitive to initial conditions uncertainty. This is why billions of
-dollars are spent each year to measure meterological variables --
-meterologists learned that the key to reducing forecast error
-\((Var[y_{t+1}])\) was to reduce the uncertainty of initial conditions
-(\(Var[y_t]\)). In contrast, ecologists are attempting to make
-actionable forecasts with little knowledge of which term in Eq. 2
+\noindent{}where each additive term follows a pattern of
+\emph{sensitivity} times \emph{variance} and ``IC uncert.'' refers to
+``\emph{I}nitial \emph{C}onditions uncertainty.'' The variance
+attributable to any particular factor is a function of how sensitive the
+model is to the factor and the variance of that factor. For example, the
+atmosphere is a chaotic system, meaning its dynamics are internally
+unstable and sensitive to initial conditions uncertainty. This is why
+billions of dollars are spent each year to measure meterological
+variables -- meterologists learned that the key to reducing forecast
+error \((Var[y_{t+1}])\) was to reduce the uncertainty of initial
+conditions (\(Var[y_t]\)). In contrast, ecologists are attempting to
+make actionable forecasts with little knowledge of which term in Eq. 2
 dominates forecast error. Knowing which term dominates forecast error in
 different ecological settings will advance our fundamental understanding
 of the natural world and immediately impact practical efforts to
@@ -243,10 +243,12 @@ highlight other interactions. Source code:
 \texttt{generate\_forecast\_fxns.R}.}
 \end{figure}
 
+\hypertarget{a-brief-history-of-quantifying-and-partitioning-forecast-uncertainty}{%
 \section{A Brief History of Quantifying and Partitioning Forecast
-Uncertainty}\label{a-brief-history-of-quantifying-and-partitioning-forecast-uncertainty}
+Uncertainty}\label{a-brief-history-of-quantifying-and-partitioning-forecast-uncertainty}}
 
-\subsection{Error propagation}\label{error-propagation}
+\hypertarget{error-propagation}{%
+\subsection{Error propagation}\label{error-propagation}}
 
 Methods for quantifying and partitioning forecast uncertainty all share
 common roots in statistical error propagation. Error propagation is
@@ -263,25 +265,29 @@ error propagation
 &= \sum^n_{i=1}\left( \frac{\delta q}{\delta x_i} \sigma_{x_i} \right)^2.
 \end{align}
 
-This expression states that the variance of the output of function \(q\)
-(\(\sigma^2_q\)) is equal to the sum of squares of the input variables
-weighted by the sensitivity of the output variable to each input
-variable, quantified as the partial derivative.
+\noindent{}This expression states that the variance of the output of
+function \(q\) (\(\sigma^2_q\)) is equal to the sum of squares of the
+input variables weighted by the sensitivity of the output variable to
+each input variable, quantified as the partial derivative.
 
-\subsection{Weather forecasting}\label{weather-forecasting}
+\hypertarget{weather-forecasting}{%
+\subsection{Weather forecasting}\label{weather-forecasting}}
 
 Chaos.
 
-\subsection{Earth system models}\label{earth-system-models}
+\hypertarget{earth-system-models}{%
+\subsection{Earth system models}\label{earth-system-models}}
 
 Carbon.
 
-\subsection{Dynamical models}\label{dynamical-models}
+\hypertarget{dynamical-models}{%
+\subsection{Dynamical models}\label{dynamical-models}}
 
 Lotka-Volterra.
 
+\hypertarget{a-simulation-based-approach-for-partitioning-forecast-uncertainty}{%
 \section{A Simulation-Based Approach for Partitioning Forecast
-Uncertainty}\label{a-simulation-based-approach-for-partitioning-forecast-uncertainty}
+Uncertainty}\label{a-simulation-based-approach-for-partitioning-forecast-uncertainty}}
 
 Analytical expressions of forecast uncertainty must rely on simplifying
 assumptions. Two important assumptions are (1) that different sources of
@@ -354,108 +360,136 @@ conditions uncertainty is incorporated because \(z_{T+1}^{(k)}\) is a
 function of \(z_{T}^{(k)}\), resulting in a total of \emph{K} point
 forecasts for \emph{z} that comprise the posterior distribution of
 \emph{z} at each time \emph{t}. If we wish to ignore initial conditions
-uncertainty, we can make all \emph{K} point forecasts starting from the
-mean of \(z_{T}\)
+uncertainty (I.C. uncertainty), we can make all \emph{K} point forecasts
+starting from the mean of \(z_{T}\)
 
 \begin{equation}
 z_{T}^{(*)} = E(z_{T} | y_1,\dots,y_T) \approx \frac{\sum^K_{k=1} z_{T}^{(k)}}{K},
 \end{equation}
 
-which we call \(z^{(*)}_T\) (as opposed to \(z^{(k)}_T\)), while
-retaining the uncertainty around all other parameters. Our iterative
-sampling to obtain the forecast distribution then becomes a conditional
-statement,
+\noindent{}which we call \(z^{(*)}_T\) (as opposed to \(z^{(k)}_T\)),
+while retaining the uncertainty around all other parameters. Our
+iterative sampling to obtain the forecast distribution then becomes a
+conditional statement,
 
 \begin{equation}
 \begin{aligned}[b]
-\textbf{No initial conditions uncert.:} \quad z_{T+q} &\sim \left[z_{T+q} | g(z_{T+q-1}^{(k)},\bm{\uptheta}^{(k)}), \sigma^{2(k)}_{\text{p}} \right], &q>1 \\
+z_{T+q} &\sim \left[z_{T+q} | g(z_{T+q-1}^{(k)},\bm{\uptheta}^{(k)}), \sigma^{2(k)}_{\text{p}} \right], &q>1 \\
 z_{T+q} &\sim \left[z_{T+q} | g(z_{T}^{(*)},\bm{\uptheta}^{(k)}), \sigma^{2(k)}_{\text{p}} \right], &q=1.
 \end{aligned}
 \end{equation}
 
-Eliminating initial conditions uncertainty is the only case that
-requires a conditional statement, making the other scenarios (no
-parameter uncertainty and no process uncertainty) even easier to
-implement,
+We can extend the basic idea of setting subsets of parameters and states
+to their posterior means (or medians, depending on the distribution) to
+make partitioned forecasts where only prescribed sources of uncertainty
+contribute to forecast uncertainty,
 
-\begin{align}
-\textbf{No parameter uncert.:} \quad z_{T+q} &\sim \left[z_{T+q} | g(z_{T+q-1}^{(k)},\bm{\uptheta}^{(*)}), \sigma^{2(k)}_{\text{p}} \right], \\
-\textbf{No process uncert.:} \quad z_{T+q} &\sim \left[z_{T+q} | g(z_{T+q-1}^{(k)},\bm{\uptheta}^{(k)}), 0 \right],
-\end{align}
+\begin{equation}
+\textbf{I.C. Uncertainty Only:} \quad z_{T+q} \sim \left[z_{T+q} | g(z_{T+q-1}^{(k)},\bm{\uptheta}^{(*)}), 0 \right]
+\end{equation}\begin{equation}
+\begin{aligned}[b]
+\textbf{Parameter Uncertainty Only:} \quad z_{T+q} &\sim \left[z_{T+q} | g(z_{T+q-1}^{(k)},\bm{\uptheta}^{(k)}), 0 \right], &q>1 \\
+z_{T+q} &\sim \left[z_{T+q} | g(z_{T}^{(*)},\bm{\uptheta}^{(k)}), 0 \right], &q=1
+\end{aligned}
+\end{equation}\begin{equation}
+\begin{aligned}[b]
+\textbf{Process Uncertainty Only:} \quad z_{T+q} &\sim \left[z_{T+q} | g(z_{T+q-1}^{(k)},\bm{\uptheta}^{(*)}), \sigma^{2(k)}_{\text{p}} \right], &q>1 \\
+z_{T+q} &\sim \left[z_{T+q} | g(z_{T}^{(*)},\bm{\uptheta}^{(*)}), \sigma^{2(k)}_{\text{p}} \right], &q=1,
+\end{aligned}
+\end{equation}
 
-\smalltodo{Need to think about diff. between including process error ($E(\sigma^2_p)$) vs. process error uncertainty ($\sigma^{2(k)}_p$).}where
-\(\sigma^{2}_{\text{p}} = 0\) in the case of no process uncertainty (Eq.
-10).
+\noindent{}\smalltodo{Need to think about diff. between including process error ($E(\sigma^2_p)$) vs. process error uncertainty ($\sigma^{2(k)}_p$).}where
+\(\sigma^{2}_{\text{p}} = 0\) in the case of no process uncertainty.
+Eqs. 9-11 can be used in different combinations to examine the
+interactions of sources of uncertainty.
 
 It is important to note that although our discussion has centered on
 obtaining forecast distributions within the MCMC algorithm used to fit
 the model, it is only feasible to do this for the full forecast
 distribution (Eq. 6). In all other cases, where states or parameters
 must be averaged over the \emph{K} MCMC iterations, forecast simulations
-must be done \emph{post hoc} using saved MCMC chains
-\smalltodo{add Box of pseudo-code?}(Box 1). In other words, estimating
-\(z_1,z_2,\dots,z_T\) is done within the MCMC fitting algorithm, while
-estimating \(z_{T+1},z_{T+2},\dots,z_{T+q}\) is done after fitting the
-model, but with the full MCMC output.
+must be done \emph{post hoc} using saved MCMC samples (Box 1). In other
+words, estimating \(z_1,z_2,\dots,z_T\) is done within the MCMC fitting
+algorithm, while estimating \(z_{T+1},z_{T+2},\dots,z_{T+q}\) is done
+after fitting the model, but with the full MCMC output.
 
 With these basics in mind, we now develop our approach for partitioning
 and quantifying uncertainty, which is similar to an Analysis of Variance
-(ANOVA). Let the variance of the forecast distribution be \(V(X)\),
-where \(X=F\) (full forecast distribution), \(I\) (no initial conditions
-uncertainty), \(PA\) (no parameter uncertainty), or \(PS\) (no process
-uncertainty). \(V(I)\), \(V(PA)\), and \(V(PS)\) are the main effects of
-each factor on the forecast distribution such that
+(ANOVA). Let the variance of the forecast distribution at time \(T+q\)
+be \(V_{T+q}^{(X)}\), where \(X=F\) (full forecast distribution), \(I\)
+(initial conditions uncertainty only), \(PA\) (parameter uncertainty
+only), or \(PS\) (process uncertainty only). \(V_{T+q}^{(I)}\),
+\(V_{T+q}^{(PA)}\), and \(V_{T+q}^{(PS)}\) are the main effects of each
+factor on the forecast distribution such that
 
 \begin{equation}
-V(F) = V(I) + V(PA) + V(PS) + V(I,PA) + V(I,PS) + V(PA,PS) + V(I,PA,PS),
+V_{T+q}^{(F)} = V_{T+q}^{(I)} + V_{T+q}^{(PA)} + V_{T+q}^{(PS)} + V_{T+q}^{(I,PA)} + V_{T+q}^{(I,PS)} + V_{T+q}^{(PA,PS)} + V_{T+q}^{(I,PA,PS)},
 \end{equation}
 
-where the notation \(V(X,Y)\) represents the interactive effect of \(X\)
-and \(Y\). The interaction between \emph{I} and \emph{PA}, for example,
-is then
+\noindent{}where the notation \(V_{T+q}^{(X,Y)}\) represents the
+remaining interactive effect of \(X\) and \(Y\) on the \(V_{T+q}^{(F)}\)
+after accounting for their main effects. Each of these terms can be
+attained by calculating the variance of the partitioned forecast
+distributions (Eqs. 9-11 and combinations thereof).
 
-\begin{equation}
-V(I,PA) = V(F) - \left[V(I) + V(PA) \right].
-\end{equation}
+\begin{Box}
+  \renewcommand{\arraystretch}{1.04}
+  \caption{}
+  \textbf{Box 1.} Pseudocode for quantifying and partitioning forecast uncertainty from a Bayesian state-space model. 
+  \vspace{1em}
+  \begin{enumerate}
+    \item Fit a Bayesian state-space model (i.e., Eq. 5) with data $y_1,\dots,y_T$ and save the MCMC samples.
+    \item Forecast $z_{T+q}^{(k)}$ for all $k = 1,\dots,K$ MCMC samples to generate the full forecast distribution following Eq. 6 (this can be done within the MCMC algorithm or \emph{post hoc} with saved MCMC samples).
+    \item Forecast $z_{T+q}^{(k)}$ for all $k = 1,\dots,K$ MCMC samples to generate the partitioned forecast distributions for each source of uncertainty, averaging quantities over the $K$ MCMC samples as necessary (Eqs. 9-11 and combinations thereof).
+    \item For each forecast time $q$, calculate the variance of each forecast distribution from steps 2-3.
+    \item Partition forecast variance using Eq. X.
+  \end{enumerate}
+  \renewcommand{\arraystretch}{1.0}
+\end{Box}
 
-And so on\ldots{}
-
+\hypertarget{application-yellowstone-bison-population}{%
 \section{Application: Yellowstone Bison
-Population}\label{application-yellowstone-bison-population}
+Population}\label{application-yellowstone-bison-population}}
 
+\hypertarget{application-measles-in-china}{%
 \section{Application: Measles in
-China}\label{application-measles-in-china}
+China}\label{application-measles-in-china}}
 
-\section{Acknowledgements}\label{acknowledgements}
+\hypertarget{acknowledgements}{%
+\section{Acknowledgements}\label{acknowledgements}}
 
-This research was funded by National Science Foundation grant
-DEB-1353078 (awarded to PBA).
+This research was funded by National Science Foundation grants
+DEB-1353078 (awarded to PBA) and DEB-1353039 (awarded to Stephen P.
+Ellner and Giles Hooker).
 
-\section*{References}\label{references}
+\setlength{\parindent}{0pt}
+
+\hypertarget{references}{%
+\section*{References}\label{references}}
 \addcontentsline{toc}{section}{References}
 
 \hypertarget{refs}{}
-\hypertarget{ref-Bauer2015}{}
+\leavevmode\hypertarget{ref-Bauer2015}{}%
 Bauer, P., A. Thorpe, and G. Brunet. 2015. The quiet revolution of
 numerical weather prediction. Nature 525:47--55.
 
-\hypertarget{ref-Cariboni2007}{}
+\leavevmode\hypertarget{ref-Cariboni2007}{}%
 Cariboni, J., D. Gatelli, R. Liska, and A. Saltelli. 2007. The role of
 sensitivity analysis in ecological modelling. Ecological Modelling
 203:167--182.
 
-\hypertarget{ref-Clark2001}{}
+\leavevmode\hypertarget{ref-Clark2001}{}%
 Clark, J. S., S. R. Carpenter, M. Barber, S. Collins, A. Dobson, J. A.
 Foley, D. M. Lodge, M. Pascual, R. Pielke, W. Pizer, C. Pringle, W. V.
 Reid, K. A. Rose, O. Sala, W. H. Schlesinger, D. H. Wall, and D. Wear.
 2001. Ecological forecasts: an emerging imperative. Science
 293:657--660.
 
-\hypertarget{ref-Dietze2017a}{}
+\leavevmode\hypertarget{ref-Dietze2017a}{}%
 Dietze, M. C. 2017. Prediction in ecology: A first-principles framework.
 Ecological Applications 27:2048--2060.
 
-\hypertarget{ref-Dietze2018}{}
+\leavevmode\hypertarget{ref-Dietze2018}{}%
 Dietze, M. C., A. Fox, L. M. Beck-Johnson, J. L. Betancourt, M. B.
 Hooten, C. S. Jarnevich, T. H. Keitt, M. A. Kenney, C. M. Laney, L. G.
 Larsen, H. W. Loescher, C. K. Lunch, B. C. Pijanowski, J. T. Randerson,
@@ -464,27 +498,27 @@ White. 2018. Iterative near-term ecological forecasting: Needs,
 opportunities, and challenges. Proceedings of the National Academy of
 Sciences 115:1424--1432.
 
-\hypertarget{ref-Gelfand1990}{}
+\leavevmode\hypertarget{ref-Gelfand1990}{}%
 Gelfand, A. E., and A. F. Smith. 1990. Sampling-based approaches to
 calculating marginal densities. Journal of the American Statistical
 Association 85:398--409.
 
-\hypertarget{ref-Hobbs2015}{}
+\leavevmode\hypertarget{ref-Hobbs2015}{}%
 Hobbs, N. T., and M. B. Hooten. 2015. Bayesian Models: A Statistical
 Primer for Ecologists. Princeton University Press, Princeton.
 
-\hypertarget{ref-Sobol1993}{}
+\leavevmode\hypertarget{ref-Sobol1993}{}%
 Sobol', I. 1993. Sensitivity Estimates for Nonlinear Mathematical
 Models.
 
-\hypertarget{ref-Steffen2015}{}
+\leavevmode\hypertarget{ref-Steffen2015}{}%
 Steffen, W., K. Richardson, J. Rockström, S. Cornell, I. Fetzer, E.
 Bennett, R. Biggs, and S. Carpenter. 2015. Planetary boundaries: Guiding
 human development on a changing planet. Science 348:1217.
 
-\hypertarget{ref-Williams2018}{}
+\leavevmode\hypertarget{ref-Williams2018}{}%
 Williams, P. J., M. B. Hooten, J. N. Womble, G. G. Esslinger, and M. R.
-Bower. 2018. Monitoring dynamic spatio‐temporal ecological processes
+Bower. 2018. Monitoring dynamic spatio-temporal ecological processes
 optimally. Ecology 99:524--535.
 
 
