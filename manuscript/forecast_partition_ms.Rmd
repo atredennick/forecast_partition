@@ -166,13 +166,17 @@ This is referred to as the forecast distribution or the predictive process distr
 
 \begin{equation}
 \begin{gathered}
-\left[z_{T+1} | y_1,\dots,y_T \right] = \int \int \dots \int \left[z_{T+1} | z_T,\bm{\uptheta}, \sigma^2_{\text{p}} \right] \\ \times \left[z_1,\dots,z_T,\bm{\uptheta}, \sigma^2_{\text{p}} | y_1,\dots,y_T \right] d\bm{\uptheta} d\sigma^2_{\text{p}} dz_1 \dots dz_T.
+\left[z_{T+1} | y_1,\dots,y_T \right] = \int \int \dots \int \left[z_{T+1} | z_T, \textbf{x}_T, \bm{\uptheta}, \sigma^2_{\text{p}} \right] \\ \times \left[z_1,\dots,z_{T+1},\bm{\uptheta}, \sigma^2_{\text{p}} | y_1,\dots,y_T \right] d\bm{\uptheta} d\sigma^2_{\text{p}} dz_1 \dots dz_T.
 \end{gathered}
 \end{equation}
 
 The model in Eq. 5 can be fit using Markov chain Monte carlo (MCMC) algorithms, which makes calculating the forecast distribution a relatively simple task.
-To obtain $\left[z_{T+1} | y_1,\dots,y_T \right]$, we can change the indexing of *t* in Eq. 3 to $t = 2,\dots,T+1$ and then sample $z_{T+1}^{(k)}$ from $\left[z_{T+1} | g(z_T^{(k)},\bm{\uptheta}^{(k)}), \sigma^{2(k)}_{\text{p}} \right]$ given the current values for $\bm{\uptheta}^{(k)}$ and $z_{T}^{(k)}$ on each $k = 1,\dots,K$ iteration of the MCMC algorithm [@Hobbs2015; @Williams2018].
-Making forecasts further into the future than $T+1$ requires extending $T+1$ to $T+2,\dots,T+q$ and iteratively sampling $\left[z_{T+q} | g(z_{T+q-1}^{(k)},\bm{\uptheta}^{(k)}), \sigma^{2(k)}_{\text{p}} \right]$ [@Hobbs2015].
+To obtain $\left[z_{T+1} | y_1,\dots,y_T \right]$, we can change the indexing of *t* in Eq. 3 to $t = 2,\dots,T+1$ and then sample $z_{T+1}^{(k)}$ from $\left[z_{T+1} | g(z_T^{(k)}, \textbf{x}_{T+1}^{(j(k))}, \bm{\uptheta}^{(k)}), \sigma^{2(k)}_{\text{p}} \right]$ given the current values for $\bm{\uptheta}^{(k)}$ and $z_{T}^{(k)}$ on each $k = 1,\dots,K$ iteration of the MCMC algorithm [@Hobbs2015; @Williams2018].
+Note that we index the external covariate vector **x** using *j* and *k*, where *j(k)* is realization *j* of the covariate vector **x** associated with MCMC sample *k*.
+In some cases, the external covariate will have only one value, in which case all *K* MCMC samples will share the same **x**.
+In other cases, their may be a distribution of external covariate values associated with uncertainty from the forecast of **x**, resulting in *n* values for each $x_{T+1}$.
+When $n < K$, which we anticipate it often will be, than **x** can be sampled with replacement and a value can be assigned to each MCMC sample. 
+Making forecasts further into the future than $T+1$ requires extending $T+1$ to $T+2,\dots,T+q$ and iteratively sampling $\left[z_{T+q} | g(z_{T+q-1}^{(k)}, \textbf{x}_{T+q}^{(j(k))},\bm{\uptheta}^{(k)}), \sigma^{2(k)}_{\text{p}} \right]$ [@Hobbs2015].
 
 The forecast distribution (Eq. 6) has all of the quantities that contribute to forecast uncertainty by incorporating their uncertainty explicitly across the *K* MCMC iterations.
 For example, initial conditions uncertainty is incorporated because $z_{T+1}^{(k)}$ is a function of $z_{T}^{(k)}$, resulting in a total of *K* point forecasts for *z* that comprise the posterior distribution of *z* at each time *t*.

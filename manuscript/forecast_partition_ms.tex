@@ -334,7 +334,7 @@ observation (\(T+1\)), is defined as
 
 \begin{equation}
 \begin{gathered}
-\left[z_{T+1} | y_1,\dots,y_T \right] = \int \int \dots \int \left[z_{T+1} | z_T,\bm{\uptheta}, \sigma^2_{\text{p}} \right] \\ \times \left[z_1,\dots,z_T,\bm{\uptheta}, \sigma^2_{\text{p}} | y_1,\dots,y_T \right] d\bm{\uptheta} d\sigma^2_{\text{p}} dz_1 \dots dz_T.
+\left[z_{T+1} | y_1,\dots,y_T \right] = \int \int \dots \int \left[z_{T+1} | z_T, \textbf{x}_T, \bm{\uptheta}, \sigma^2_{\text{p}} \right] \\ \times \left[z_1,\dots,z_{T+1},\bm{\uptheta}, \sigma^2_{\text{p}} | y_1,\dots,y_T \right] d\bm{\uptheta} d\sigma^2_{\text{p}} dz_1 \dots dz_T.
 \end{gathered}
 \end{equation}
 
@@ -344,13 +344,23 @@ relatively simple task. To obtain
 \(\left[z_{T+1} | y_1,\dots,y_T \right]\), we can change the indexing of
 \emph{t} in Eq. 3 to \(t = 2,\dots,T+1\) and then sample
 \(z_{T+1}^{(k)}\) from
-\(\left[z_{T+1} | g(z_T^{(k)},\bm{\uptheta}^{(k)}), \sigma^{2(k)}_{\text{p}} \right]\)
+\(\left[z_{T+1} | g(z_T^{(k)}, \textbf{x}_{T+1}^{(j(k))}, \bm{\uptheta}^{(k)}), \sigma^{2(k)}_{\text{p}} \right]\)
 given the current values for \(\bm{\uptheta}^{(k)}\) and \(z_{T}^{(k)}\)
 on each \(k = 1,\dots,K\) iteration of the MCMC algorithm (Hobbs and
-Hooten 2015, Williams et al. 2018). Making forecasts further into the
-future than \(T+1\) requires extending \(T+1\) to \(T+2,\dots,T+q\) and
-iteratively sampling
-\(\left[z_{T+q} | g(z_{T+q-1}^{(k)},\bm{\uptheta}^{(k)}), \sigma^{2(k)}_{\text{p}} \right]\)
+Hooten 2015, Williams et al. 2018). Note that we index the external
+covariate vector \textbf{x} using \emph{j} and \emph{k}, where
+\emph{j(k)} is realization \emph{j} of the covariate vector \textbf{x}
+associated with MCMC sample \emph{k}. In some cases, the external
+covariate will have only one value, in which case all \emph{K} MCMC
+samples will share the same \textbf{x}. In other cases, their may be a
+distribution of external covariate values associated with uncertainty
+from the forecast of \textbf{x}, resulting in \emph{n} values for each
+\(x_{T+1}\). When \(n < K\), which we anticipate it often will be, than
+\textbf{x} can be sampled with replacement and a value can be assigned
+to each MCMC sample. Making forecasts further into the future than
+\(T+1\) requires extending \(T+1\) to \(T+2,\dots,T+q\) and iteratively
+sampling
+\(\left[z_{T+q} | g(z_{T+q-1}^{(k)}, \textbf{x}_{T+q}^{(j(k))},\bm{\uptheta}^{(k)}), \sigma^{2(k)}_{\text{p}} \right]\)
 (Hobbs and Hooten 2015).
 
 The forecast distribution (Eq. 6) has all of the quantities that
