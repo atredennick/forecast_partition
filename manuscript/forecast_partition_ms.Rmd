@@ -22,6 +22,7 @@ header-includes:
 - \newcommand{\boxnumber}{\addtocounter{box}{1} \thebox \thinspace}
 - \floatstyle{boxed}
 - \newfloat{Box}{tbph}{box}
+- \floatsetup[table]{capposition=top}
 fontsize: 12pt
 bibliography: /Users/atredenn/Dropbox/Bibliography/ecocast.bib
 ---
@@ -33,9 +34,9 @@ bibliography: /Users/atredenn/Dropbox/Bibliography/ecocast.bib
 \raggedright
 \setlength{\parindent}{36pt}
 
-$^1$ Department of Wildland Resources and the Ecology Center, Utah State University, Logan, UT, United States
+\noindent{}$^1$ Department of Wildland Resources and the Ecology Center, Utah State University, Logan, UT, United States
 
-$^2$ Department of somewhere
+\noindent{}$^2$ Department of somewhere
 
 # Abstract
 
@@ -191,46 +192,58 @@ Our iterative sampling to obtain the forecast distribution then becomes a condit
 
 \begin{equation}
 \begin{aligned}[b]
-z_{T+q} &\sim \left[z_{T+q} | g(z_{T+q-1}^{(k)},\bm{\uptheta}^{(k)}), \sigma^{2(k)}_{\text{p}} \right], &q>1 \\
-z_{T+q} &\sim \left[z_{T+q} | g(z_{T}^{(*)},\bm{\uptheta}^{(k)}), \sigma^{2(k)}_{\text{p}} \right], &q=1.
+z_{T+q} &\sim \left[z_{T+q} | g(z_{T+q-1}^{(k)}, \textbf{x}_T^{(j(k))}, \bm{\uptheta}^{(k)}), \sigma^{2(k)}_{\text{p}} \right], &q>1 \\
+z_{T+q} &\sim \left[z_{T+q} | g(z_{T}^{(*)}, \textbf{x}_T^{(j(k))}, \bm{\uptheta}^{(k)}), \sigma^{2(k)}_{\text{p}} \right], &q=1.
 \end{aligned}
 \end{equation}
 
-We can extend the basic idea of setting subsets of parameters and states to their posterior means (or medians, depending on the distribution) to make partitioned forecasts where only prescribed sources of uncertainty contribute to forecast uncertainty,
+\noindent{}We can extend the basic idea of setting subsets of parameters and states to their posterior means (or medians, depending on the distribution) to make partitioned forecasts where only prescribed sources of uncertainty contribute to forecast uncertainty (Table 1).
 
-\begin{equation}
-\textbf{I.C. Uncertainty Only:} \quad z_{T+q} \sim \left[z_{T+q} | g(z_{T+q-1}^{(k)},\bm{\uptheta}^{(*)}), 0 \right]
-\end{equation}
-\begin{equation}
-\begin{aligned}[b]
-\textbf{Parameter Uncertainty Only:} \quad z_{T+q} &\sim \left[z_{T+q} | g(z_{T+q-1}^{(k)},\bm{\uptheta}^{(k)}), 0 \right], &q>1 \\
-z_{T+q} &\sim \left[z_{T+q} | g(z_{T}^{(*)},\bm{\uptheta}^{(k)}), 0 \right], &q=1
-\end{aligned}
-\end{equation}
-\begin{equation}
-\begin{aligned}[b]
-\textbf{Process Uncertainty Only:} \quad z_{T+q} &\sim \left[z_{T+q} | g(z_{T+q-1}^{(k)},\bm{\uptheta}^{(*)}), \sigma^{2(k)}_{\text{p}} \right], &q>1 \\
-z_{T+q} &\sim \left[z_{T+q} | g(z_{T}^{(*)},\bm{\uptheta}^{(*)}), \sigma^{2(k)}_{\text{p}} \right], &q=1,
-\end{aligned}
-\end{equation}
 
-\noindent{}\smalltodo{Need to think about diff. between including process error ($E(\sigma^2_p)$) vs. process error uncertainty ($\sigma^{2(k)}_p$).}where $\sigma^{2}_{\text{p}} = 0$ in the case of no process uncertainty.
-Eqs. 9-11 can be used in different combinations to examine the interactions of sources of uncertainty.
+\renewcommand{\arraystretch}{1.6}
+\begin{table}[ptb]
+\centering 
+\begin{tabular}{l l l l l}
+\toprule
+\textbf{Source of Uncertainty} & \textbf{Notation} && \textbf{Sampling Equation} & \\
+\midrule 
+I.C. Uncertainty Only & $V(I,\overline{PA},\overline{D},\overline{PS})$ &&  $\left[z_{T+q} \; | \; g(z_{T+q-1}^{(k)}, \textbf{x}^{(*)}_T, \bm{\uptheta}^{(*)}), 0 \right]$ & \\
+\addlinespace[0.3cm]
+Parameter Uncertainty Only & $V(\overline{I},PA,\overline{D},\overline{PS})$ && $\left[z_{T+q} \; | \; g(z_{T+q-1}^{(k)}, \textbf{x}^{(*)}_T, \bm{\uptheta}^{(k)}), 0 \right]$, & $q>1$ \\
+ &&& $\left[z_{T+q} \; | \; g(z_{T}^{(*)}, \textbf{x}^{(*)}_T, \bm{\uptheta}^{(k)}), 0 \right]$, & $q=1$ \\
+  \addlinespace[0.3cm]
+Driver Uncertainty Only & $V(\overline{I},\overline{PA},D,\overline{PS})$ && $\left[z_{T+q} \; | \; g(z_{T+q-1}^{(k)}, \textbf{x}^{(j(k))}_T, \bm{\uptheta}^{(*)}), 0 \right]$, & $q>1$ \\
+ &&& $\left[z_{T+q} \; | \; g(z_{T}^{(*)}, \textbf{x}^{(j(k))}_T, \bm{\uptheta}^{(*)}), 0 \right]$, & $q=1$ \\
+ \addlinespace[0.3cm]
+Process Uncertainty Only & $V(\overline{I},\overline{PA},\overline{D},PS)$ && $\left[z_{T+q} \; | \; g(z_{T+q-1}^{(k)}, \textbf{x}^{(*)}_T, \bm{\uptheta}^{(*)}), \sigma^{2(k)}_{\text{p}} \right]$, & $q>1$ \\
+ &&& $\left[z_{T+q} \; | \; g(z_{T}^{(*)}, \textbf{x}^{(*)}_T, \bm{\uptheta}^{(*)}), \sigma^{2(k)}_{\text{p}} \right]$, & $q=1$ \\
+\bottomrule 
+\end{tabular}
+\caption{Sampling equations for generating forecasts at times $T+q$ (where $T$ is the time of the last observation) with only certain sources of uncertainty present.}   
+\label{tab:sampling_formulas}
+\end{table} 
+\renewcommand{\arraystretch}{1.0}
+
 
 It is important to note that although our discussion has centered on obtaining forecast distributions within the MCMC algorithm used to fit the model, it is only feasible to do this for the full forecast distribution (Eq. 6).
 In all other cases, where states or parameters must be averaged over the *K* MCMC iterations, forecast simulations must be done *post hoc* using saved MCMC samples (Box 1).
 In other words, estimating $z_1,z_2,\dots,z_T$ is done within the MCMC fitting algorithm, while estimating $z_{T+1},z_{T+2},\dots,z_{T+q}$ is done after fitting the model, but with the full MCMC output.
 
 With these basics in mind, we now develop our approach for partitioning and quantifying uncertainty, which is similar to an Analysis of Variance (ANOVA).
-Let the variance of the forecast distribution at time $T+q$ be $V_{T+q}^{(X)}$, where $X=F$ (full forecast distribution), $I$ (initial conditions uncertainty only), $PA$ (parameter uncertainty only), or $PS$ (process uncertainty only).
-$V_{T+q}^{(I)}$, $V_{T+q}^{(PA)}$, and $V_{T+q}^{(PS)}$ are the main effects of each factor on the forecast distribution such that
+Let the variance of the forecast distribution at time $T+q$ be $V_{T+q}^{(X)}$, where $X=F$ (full forecast distribution), $I$ (initial conditions uncertainty only), $PA$ (parameter uncertainty only), $D$ (driver uncertainty),  or $PS$ (process uncertainty only).
+$V_{T+q}^{(I)}$, $V_{T+q}^{(PA)}$, $V_{T+q}^{(D)}$, and $V_{T+q}^{(PS)}$ are the main effects of each factor on the forecast distribution such that
 
 \begin{equation}
-V_{T+q}^{(F)} = V_{T+q}^{(I)} + V_{T+q}^{(PA)} + V_{T+q}^{(PS)} + V_{T+q}^{(I,PA)} + V_{T+q}^{(I,PS)} + V_{T+q}^{(PA,PS)} + V_{T+q}^{(I,PA,PS)},
+\begin{aligned}[b]
+V_{T+q}^{(F)} = \ &V_{T+q}^{(I)} + V_{T+q}^{(PA)} + V_{T+q}^{(D)} + V_{T+q}^{(PS)} \\
+&+ V_{T+q}^{(I,PA)} + V_{T+q}^{(I,D)} + V_{T+q}^{(I,PS)} + V_{T+q}^{(PA,PS)} + V_{T+q}^{(PA,D)} + V_{T+q}^{(D,PS)} \\
+&+ V_{T+q}^{(I,PA,D)} + V_{T+q}^{(I,PA,PS)} + V_{T+q}^{(I,D,PS)} + V_{T+q}^{(PA,D,PS)} \\
+&+ V_{T+q}^{(I,PA,D,PS)},
+\end{aligned}
 \end{equation}
 
-\noindent{}where the notation $V_{T+q}^{(X,Y)}$ represents the remaining interactive effect of $X$ and $Y$ on the $V_{T+q}^{(F)}$ after accounting for their main effects.
-Each of these terms can be attained by calculating the variance of the partitioned forecast distributions (Eqs. 9-11 and combinations thereof).
+\noindent{}where the notation $V_{T+q}^{(X,Y)}$ represents the remaining interactive effect of $X$ and $Y$ on $V_{T+q}^{(F)}$ after accounting for their main effects.
+Each of these terms can be attained by calculating the variance of the partitioned forecast distributions (equations in Table 1 and combinations thereof).
 
 \begin{Box}
   \renewcommand{\arraystretch}{1.04}
@@ -240,7 +253,7 @@ Each of these terms can be attained by calculating the variance of the partition
   \begin{enumerate}
     \item Fit a Bayesian state-space model (i.e., Eq. 5) with data $y_1,\dots,y_T$ and save the MCMC samples.
     \item Forecast $z_{T+q}^{(k)}$ for all $k = 1,\dots,K$ MCMC samples to generate the full forecast distribution following Eq. 6 (this can be done within the MCMC algorithm or \emph{post hoc} with saved MCMC samples).
-    \item Forecast $z_{T+q}^{(k)}$ for all $k = 1,\dots,K$ MCMC samples to generate the partitioned forecast distributions for each source of uncertainty, averaging quantities over the $K$ MCMC samples as necessary (Eqs. 9-11 and combinations thereof).
+    \item Forecast $z_{T+q}^{(k)}$ for all $k = 1,\dots,K$ MCMC samples to generate the partitioned forecast distributions for each source of uncertainty, averaging quantities over the $K$ MCMC samples as necessary (equations in Table 1 and combinations thereof).
     \item For each forecast time $q$, calculate the variance of each forecast distribution from steps 2-3.
     \item Partition forecast variance using Eq. X.
   \end{enumerate}
@@ -255,8 +268,36 @@ Each of these terms can be attained by calculating the variance of the partition
 
 # Application: Measles in China
 
+# Discussion
+
 # Acknowledgements
 This research was funded by National Science Foundation grants DEB-1353078 (awarded to PBA) and DEB-1353039 (awarded to Stephen P. Ellner and Giles Hooker).
 
 \setlength{\parindent}{0pt}
 # References
+
+
+
+
+
+<!-- \begin{equation} -->
+<!-- \textbf{I.C. Uncertainty Only:} \quad z_{T+q} \sim \left[z_{T+q} | g(z_{T+q-1}^{(k)}, \textbf{x}^{(*)}_T, \bm{\uptheta}^{(*)}), 0 \right] -->
+<!-- \end{equation} -->
+<!-- \begin{equation} -->
+<!-- \begin{aligned}[b] -->
+<!-- \textbf{Parameter Uncertainty Only:} \quad z_{T+q} &\sim \left[z_{T+q} | g(z_{T+q-1}^{(k)}, \textbf{x}^{(*)}_T, \bm{\uptheta}^{(k)}), 0 \right], &q>1 \\ -->
+<!-- z_{T+q} &\sim \left[z_{T+q} | g(z_{T}^{(*)}, \textbf{x}^{(*)}_T, \bm{\uptheta}^{(k)}), 0 \right], &q=1 -->
+<!-- \end{aligned} -->
+<!-- \end{equation} -->
+<!-- \begin{equation} -->
+<!-- \begin{aligned}[b] -->
+<!-- \textbf{Driver Uncertainty Only:} \quad z_{T+q} &\sim \left[z_{T+q} | g(z_{T+q-1}^{(k)}, \textbf{x}^{(j(k))}_T, \bm{\uptheta}^{(*)}), 0 \right], &q>1 \\ -->
+<!-- z_{T+q} &\sim \left[z_{T+q} | g(z_{T}^{(*)}, \textbf{x}^{(j(k))}_T, \bm{\uptheta}^{(*)}), 0 \right], &q=1, -->
+<!-- \end{aligned} -->
+<!-- \end{equation} -->
+<!-- \begin{equation} -->
+<!-- \begin{aligned}[b] -->
+<!-- \textbf{Process Uncertainty Only:} \quad z_{T+q} &\sim \left[z_{T+q} | g(z_{T+q-1}^{(k)}, \textbf{x}^{(*)}_T, \bm{\uptheta}^{(*)}), \sigma^{2(k)}_{\text{p}} \right], &q>1 \\ -->
+<!-- z_{T+q} &\sim \left[z_{T+q} | g(z_{T}^{(*)}, \textbf{x}^{(*)}_T, \bm{\uptheta}^{(*)}), \sigma^{2(k)}_{\text{p}} \right], &q=1, -->
+<!-- \end{aligned} -->
+<!-- \end{equation} -->
