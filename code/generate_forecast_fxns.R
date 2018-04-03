@@ -272,31 +272,34 @@ ggplot(outcasts_combined, aes(x = year, y = value, group = key))+
 forecast_var <- outcasts_combined %>%
   group_by(year, simulation) %>%
   summarise(variance = var(value)) %>%
+  ungroup() %>%
   spread(simulation, variance) %>%
   mutate(interaction = noinit + noparam) %>%
   gather(simulation, variance, -year)
 
 mylabs <- c(expression(V^(F)),
             expression(V^(I)+V^(PA)),
-            expression(V^(I)),
-            expression(V^(PA)))
+            expression(V^(PA)),
+            expression(V^(I)))
 
 ggplot(forecast_var, aes(x = year, y = variance))+
   geom_ribbon(aes(ymax = forecast_var[forecast_var$simulation=="all","variance"],
                   ymin = forecast_var[forecast_var$simulation=="interaction","variance"]),
               fill = "grey88")+
-  geom_line(aes(color = simulation), size = 1.3)+
+  geom_line(aes(linetype = simulation), size = 0.6)+
   annotate("text", x = 8, y = 30, label = "epsilon^(italic('I,PA'))", parse = TRUE, size = 5)+
-  xlab("Forecast year (T+q)")+
+  xlab("Forecast year (T + q)")+
   ylab("Forecast variance (V)")+
-  scale_color_colorblind(name = NULL, labels = mylabs)+
+  # scale_color_colorblind(name = NULL, labels = mylabs)+
+  scale_linetype_manual(values = c(1,2,3,6),name = NULL, labels = mylabs)+
   scale_x_continuous(breaks = c(0,2,4,6,8,10))+
   theme_few()+
   theme(legend.position = c(0,1),
         legend.justification=c(-0.1, 1.1),
         legend.text=element_text(size=10),
-        legend.text.align = 0)
-ggsave(filename = "../figures/example_interaction_effect.pdf", width = 3.5, height = 3, units = "in")
+        legend.text.align = 0,
+        legend.key.width = unit(1,"cm"))
+ggsave(filename = "../figures/example_interaction_effect.pdf", width = 4.2, height = 3, units = "in")
 
 interaction_var <- forecast_var %>%
   spread(simulation, variance) %>%

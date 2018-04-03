@@ -343,7 +343,7 @@ The model in Eq. 5 can be fit using Markov chain Monte carlo (MCMC)
 algorithms, which makes calculating the forecast distribution a
 relatively simple task. To obtain
 \(\left[z_{T+1} | y_1,\dots,y_T \right]\), we can change the indexing of
-\emph{t} in Eq. 3 to \(t = 2,\dots,T+1\) and then sample
+\emph{t} in Eq. 5 to \(t = 2,\dots,T+1\) and then sample
 \(z_{T+1}^{(k)}\) from
 \(\left[z_{T+1} | g(z_T^{(k)}, \textbf{x}_{T+1}^{(j(k))}, \bm{\uptheta}^{(k)}), \sigma^{2(k)}_{\text{p}} \right]\)
 given the current values for \(\bm{\uptheta}^{(k)}\) and \(z_{T}^{(k)}\)
@@ -356,7 +356,7 @@ covariate will have only one value, in which case all \emph{K} MCMC
 samples will share the same \textbf{x}. In other cases, their may be a
 distribution of external covariate values associated with uncertainty
 from the forecast of \textbf{x}, resulting in \emph{n} values for each
-\(x_{T+1}\). When \(n < K\), which we anticipate it often will be, than
+\(x_{T+1}\). When \(n < K\), which we anticipate it often will be, then
 \textbf{x} can be sampled with replacement and a value can be assigned
 to each MCMC sample. Making forecasts further into the future than
 \(T+1\) requires extending \(T+1\) to \(T+2,\dots,T+q\) and iteratively
@@ -448,20 +448,35 @@ V_{T+q}^{(F)} = \ &V_{T+q}^{(I)} + V_{T+q}^{(PA)} + V_{T+q}^{(D)} + V_{T+q}^{(PS
 
 \noindent{}where the notation \(\epsilon_{T+q}^{(X,Y)}\) represents the
 remaining interactive effect of \(X\) and \(Y\) on \(V_{T+q}^{(F)}\)
-after accounting for their main effects, such that if the full forecast
-variance is a function of \emph{X} and \emph{Y}
+after accounting for their main effects. For example, if the full
+forecast variance is a function of only initial conditions uncertainty
+\emph{I} and parameter uncertainty \emph{PA}, then
 
-\begin{align}
-V^{(F)}_{T+q} &= V^{(X)}_{T+q} + V^{(Y)}_{T+q} + \epsilon_{T+q}^{(X,Y)}, \\
-\epsilon_{T+q}^{(X,Y)} &= V^{(F)}_{T+q} - \left[ V^{(X)}_{T+q} + V^{(Y)}_{T+q}. \right]
-\end{align}
+\begin{equation}
+V^{(F)}_{T+q} = V^{(I)}_{T+q} + V^{(PA)}_{T+q} + \epsilon_{T+q}^{(I,PA)},
+\end{equation}
+
+\noindent{}which rearranges to
+
+\begin{equation}
+\epsilon_{T+q}^{(I,PA)} = V^{(F)}_{T+q} - \left[ V^{(I)}_{T+q} + V^{(PA)}_{T+q} \right].
+\end{equation}
 
 \noindent{}We show an example of applying Eqs. 10-11 in a hypothetical
 situation where forecast uncertainty is determined by initial conditions
 uncertainty and parameter uncertainty alone (Figure 2). The necessary
 terms for partitioning forecast variance can be obtained by calculating
 the variance of the partitioned forecast distributions (equations in
-Table 1 and combinations thereof).
+Table 1 and combinations thereof). To take this one step further, and to
+reiterate the core idea, let \(V(F)\) be a function of initial
+conditions uncertainty \emph{I}, parameter uncertainty \emph{PA}, and
+driver uncertainty \emph{D}. We can then write the equation for forecast
+uncertainty and the derived interaction effects as
+
+\begin{align}
+V^{(F)}_{T+q} &= V^{(I)}_{T+q} + V^{(PA)}_{T+q} + V^{(D)}_{T+q} + \epsilon^{(I,PA)}_{T+q} + \epsilon^{(I,D)}_{T+q} + \epsilon^{(D,PA)}_{T+q} + \epsilon^{(I,PA,D)}_{T+q}, \qquad \text{where} \\
+\epsilon^{(I,PA)}_{T+q} &= V^{(F)}_{T+q} - 
+\end{align}
 
 \begin{figure}
 \centering
