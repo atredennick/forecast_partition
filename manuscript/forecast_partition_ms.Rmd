@@ -262,9 +262,14 @@ We can then write the equation for forecast uncertainty and the derived interact
 
 \begin{align}
 V^{(F)}_{T+q} &= V^{(I)}_{T+q} + V^{(PA)}_{T+q} + V^{(D)}_{T+q} + \epsilon^{(I,PA)}_{T+q} + \epsilon^{(I,D)}_{T+q} + \epsilon^{(D,PA)}_{T+q} + \epsilon^{(I,PA,D)}_{T+q}, \qquad \text{where} \\
-\epsilon^{(I,PA)}_{T+q} &= V^{(F)}_{T+q} - 
+\epsilon^{(I,PA)}_{T+q} &= V^{(I+PA)}_{T+q} - \left[V^{(I)}_{T+q} + V^{(PA)}_{T+q}\right] \\
+\epsilon^{(I,D)}_{T+q} &= V^{(I+D)}_{T+q} - \left[V^{(I)}_{T+q} + V^{(D)}_{T+q}\right] \\
+\epsilon^{(PA,D)}_{T+q} &= V^{(PA+D)}_{T+q} - \left[V^{(PA)}_{T+q} + V^{(D)}_{T+q}\right] \\
+\epsilon^{(I,PA,D)}_{T+q} &= V^{(F)}_{T+q} - \left[V^{(I)}_{T+q} + V^{(PA)}_{T+q} + V^{(D)}_{T+q}\right] - \left[\epsilon^{(I,PA)}_{T+q} + \epsilon^{(I,D)}_{T+q} + \epsilon^{(PA,D)}_{T+q} \right],
 \end{align}
 
+\noindent{}where the notation $V^{(A+B)}_{T+q}$ is the forecast variance under scenario where both *A* and *B* are allowed to contribute to forecast uncertainty (i.e., a combination of the equations in Table 1).
+We present the equations for the full partition among *I*, *PA*, *D*, and *PS* in Appendix 1.
 
 ![ Graphical example of partitioning forecast uncertainty into main effects ($V$) and interaction effects ($\epsilon$). The grey shaded area shows the interaction effect ($\epsilon^{(I,PA)}$) that must be accounted for to fully partition forecast uncertainty between initial conditions uncertainty ($V^{(I)}$) and parameter uncertainty ($V^{(PA)}$). Source code: `generate_forecast_fxns.R`. ](../figures/example_interaction_effect.pdf){ height=3in }
 

@@ -475,8 +475,17 @@ uncertainty and the derived interaction effects as
 
 \begin{align}
 V^{(F)}_{T+q} &= V^{(I)}_{T+q} + V^{(PA)}_{T+q} + V^{(D)}_{T+q} + \epsilon^{(I,PA)}_{T+q} + \epsilon^{(I,D)}_{T+q} + \epsilon^{(D,PA)}_{T+q} + \epsilon^{(I,PA,D)}_{T+q}, \qquad \text{where} \\
-\epsilon^{(I,PA)}_{T+q} &= V^{(F)}_{T+q} - 
+\epsilon^{(I,PA)}_{T+q} &= V^{(I+PA)}_{T+q} - \left[V^{(I)}_{T+q} + V^{(PA)}_{T+q}\right] \\
+\epsilon^{(I,D)}_{T+q} &= V^{(I+D)}_{T+q} - \left[V^{(I)}_{T+q} + V^{(D)}_{T+q}\right] \\
+\epsilon^{(PA,D)}_{T+q} &= V^{(PA+D)}_{T+q} - \left[V^{(PA)}_{T+q} + V^{(D)}_{T+q}\right] \\
+\epsilon^{(I,PA,D)}_{T+q} &= V^{(F)}_{T+q} - \left[V^{(I)}_{T+q} + V^{(PA)}_{T+q} + V^{(D)}_{T+q}\right] - \left[\epsilon^{(I,PA)}_{T+q} + \epsilon^{(I,D)}_{T+q} + \epsilon^{(PA,D)}_{T+q} \right],
 \end{align}
+
+\noindent{}where the notation \(V^{(A+B)}_{T+q}\) is the forecast
+variance under scenario where both \emph{A} and \emph{B} are allowed to
+contribute to forecast uncertainty (i.e., a combination of the equations
+in Table 1). We present the equations for the full partition among
+\emph{I}, \emph{PA}, \emph{D}, and \emph{PS} in Appendix 1.
 
 \begin{figure}
 \centering
