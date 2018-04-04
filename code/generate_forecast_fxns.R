@@ -277,7 +277,7 @@ forecast_var <- outcasts_combined %>%
   mutate(interaction = noinit + noparam) %>%
   gather(simulation, variance, -year)
 
-mylabs <- c(expression(V^(F)),
+mylabs <- c(expression(paste(V^(F),"=",V^(I+PA))),
             expression(V^(I)+V^(PA)),
             expression(V^(PA)),
             expression(V^(I)))
