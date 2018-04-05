@@ -134,19 +134,19 @@ It is this generic model formulation that leads to the canonical expression of e
 &= \sum^n_{i=1}\left( \frac{\delta q}{\delta x_i} \sigma_{x_i} \right)^2.
 \end{align}
 
-\noindent{}This expression states that the variance of the output of function $q$ ($\sigma^2_q$) is equal to the sum of squares of the input variables weighted by the sensitivity of the output variable to each input variable, quantified as the partial derivative.
+\noindent{}This expression states that the variance of the output of function $q$ ($\sigma^2_q$) is equal to the sum of squares of the input variables weighted by the sensitivity of the output variable to each input variable, quantified as the partial derivative. *Add more here on interactions, which require knowing the correlations among x's.*
+
+##  Dynamic theoretical models
+
+Lotka-Volterra style models and variance of *t+1* (draws from error propagation and sensitivity analysis).
 
 ##  Weather forecasting
 
-Chaos.
+Chaos and initial conditions.
 
 ##  Earth system models
 
-Carbon.
-
-##  Dynamical models
-
-Lotka-Volterra.
+Carbon and uncertainty from models and scenarios.
 
 # A Simulation-Based Approach for Partitioning Forecast Uncertainty
 
@@ -212,6 +212,8 @@ z_{T+q} &\sim \left[z_{T+q} | g(z_{T}^{(*)}, \textbf{x}_T^{(j(k))}, \bm{\uptheta
 
 \renewcommand{\arraystretch}{1.6}
 \begin{table}[ptb]
+\caption{Sampling equations for generating forecast distributions at times $T+q$ (where $T$ is the time of the last observation) across $k=1,\dots,K$ MCMC samples  with only certain sources of uncertainty present.}   
+\label{tab:sampling_formulas}
 \centering 
 \begin{tabular}{l l l l l}
 \toprule
@@ -229,8 +231,7 @@ Process Uncertainty & $V^{(PS)}=V^{(\overline{I},\overline{PA},\overline{D},PS)}
  &&& $\left[z_{T+q} \; | \; g(z_{T}^{(*)}, \textbf{x}^{(*)}_T, \bm{\uptheta}^{(*)}), \sigma^{2(k)}_{\text{p}} \right]$, & $q=1$ \\
 \bottomrule 
 \end{tabular}
-\caption{Sampling equations for generating forecasts at times $T+q$ (where $T$ is the time of the last observation) with only certain sources of uncertainty present.}   
-\label{tab:sampling_formulas}
+\raggedright \small \emph{Note}: The notation $V^{(A,\overline{B},\overline{C})}$ means that uncertainty from \emph{A} enters the forecast from its posterior distribution (as approximated from MCMC samples), while sources \emph{B} and \emph{C} are set to their means (as calculated across the MCMC samples). In the main text we leave out the averaged terms (those with overbars) to reduce clutter. Thus, $V^{(A)}=V^{(A,\overline{B},\overline{C})}$.
 \end{table} 
 \renewcommand{\arraystretch}{1.0}
 
@@ -265,10 +266,11 @@ V^{(F)}_{T+q} = V^{(I)}_{T+q} + V^{(PA)}_{T+q} + \epsilon_{T+q}^{(I,PA)},
 \epsilon_{T+q}^{(I,PA)} = V^{(F)}_{T+q} - \left[ V^{(I)}_{T+q} + V^{(PA)}_{T+q} \right].
 \end{equation}
 
-\noindent{}We show an example of applying Eqs. 10-11 in a hypothetical situation where forecast uncertainty is determined by initial conditions uncertainty and parameter uncertainty alone (Figure 2).
+\noindent{}We show an example of applying Eqs. 10-11 in a hypothetical situation where forecast uncertainty is determined by initial conditions uncertainty and parameter uncertainty alone in Figure 2.
+
 The necessary terms for partitioning forecast variance can be obtained by calculating the variance of the partitioned forecast distributions (equations in Table 1 and combinations thereof).
 To take this one step further, and to reiterate the core idea, let $V(F)$ be a function of initial conditions uncertainty *I*, parameter uncertainty *PA*, and driver uncertainty *D*.
-We can then write the equation for forecast uncertainty and the derived interaction effects as
+We can then write the equation for forecast uncertainty and the derived interaction \smalltodo{There must be a way to write a concise form of these equations vai summations.}effects as
 
 \begin{align}
 V^{(F)}_{T+q} &= V^{(I)}_{T+q} + V^{(PA)}_{T+q} + V^{(D)}_{T+q} + \epsilon^{(I,PA)}_{T+q} + \epsilon^{(I,D)}_{T+q} + \epsilon^{(D,PA)}_{T+q} + \epsilon^{(I,PA,D)}_{T+q}, \qquad \text{where} \\
@@ -280,6 +282,7 @@ V^{(F)}_{T+q} &= V^{(I)}_{T+q} + V^{(PA)}_{T+q} + V^{(D)}_{T+q} + \epsilon^{(I,P
 
 \noindent{}where the notation $V^{(A+B)}_{T+q}$ is the forecast variance under scenario where both *A* and *B* are allowed to contribute to forecast uncertainty (i.e., a combination of the equations in Table 1).
 We present the equations for the full partition among *I*, *PA*, *D*, and *PS* in Appendix 1.
+In the next two sections, we apply our approach (Box 1) to quantify and partition the uncertainty of near-term forecasts of the Yellowstone bison population and measles cases in China.
 
 ![ Graphical example of partitioning forecast uncertainty into main effects ($V$) and interaction effects ($\epsilon$). The grey shaded area shows the interaction effect ($\epsilon^{(I,PA)}$) that must be accounted for to fully partition forecast uncertainty between initial conditions uncertainty ($V^{(I)}$) and parameter uncertainty ($V^{(PA)}$). Source code: `generate_forecast_fxns.R`. ](../figures/example_interaction_effect.pdf){ height=3in }
 
@@ -312,6 +315,7 @@ We present the equations for the full partition among *I*, *PA*, *D*, and *PS* i
 This research was funded by National Science Foundation grants DEB-1353078 (awarded to PBA) and DEB-1353039 (awarded to Stephen P. Ellner and Giles Hooker).
 
 \setlength{\parindent}{0pt}
+
 # References
 
 
