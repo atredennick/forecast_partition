@@ -148,27 +148,28 @@ bison}
 \hypertarget{introduction}{%
 \section{Introduction}\label{introduction}}
 
-A fundamental challenge facing society is to predict the ecological
-impacts of global environmental changes such as nitrogen deposition,
-climate change, and habitat fragmentation. Each of these global change
-drivers have now exceeded their historical ranges of variability
-(Steffen et al. 2015), ushering in a no-analog era in which the past
-cannot predict the future. We can, however, look to the past to
-parameterize models that allow us to forecast the future states of
-ecological systems (Clark et al. 2001, Dietze et al. 2018). Ecologists
-are in an excellent position to meet this forecasting challenge because
-we have spent decades gaining understanding of the processes that
-regulate populations, communities, and ecosystems. However, we lack a
-systematic understanding of the current limits to ecological forecasts.
-As a result, we do not know how to allocate research effort to improve
-our forecasts.
+Ecology is entering an era of prediction. This new era is being made
+possible by continuous data streams (e.g., the National Ecological
+Observatory Network, citizen science data, remote sensing), an increased
+statistical literacy among ecologists, and the need to provide
+actionable information for decision makers (Dietze et al. 2018). Thus,
+we are on the verge of answering Clark et al.'s (2001) challenge to make
+forecasting a core goal of ecology. Ecologists are in an excellent
+position to meet this forecasting challenge because we have spent
+decades gaining understanding of the processes that regulate
+populations, communities, and ecosystems. But we lack a systematic
+understanding of the current limits to ecological forecasts. As a
+result, we do not know how to allocate research effort to improve our
+forecasts.
 
 Making poor forecasts is inevitable as ecology matures into a more
 predictive science. The key is to learn from our failures so that
 forecasts become more accurate over time. The success of meteorological
 forecasting tells us that basic research on the causes of forecast
 uncertainty is an essential component of this learning process (Bauer et
-al. 2015).
+al. 2015). Therefore, we need a systematic and robust way to quantify
+and partition forecast uncertainty into its constituent parts (Dietze
+2017).
 
 Various approaches have been used to characterize and partition forecast
 uncertainty (Sobol' 1993, Cariboni et al. 2007). For example, consider a
@@ -221,27 +222,41 @@ only holds when the underlying dynamics are linear, which may not be the
 case for many populations and models. Second, Eq. 2 only includes
 additive effects of each factor because the Taylor series decomposition
 requires small-variance approximations that eliminate interactions. But,
-interactions among the factors are probably commone. For example, in a
+interactions among the factors are probably common. For example, in a
 simple simulation of an AR(1) process, we show that initial conditions
 uncertainty and parameter error interact to generate the full spread of
-forecast variance (Figure 1). Therefore, progress in quantifying and
-partioning forecast uncertainty requires a more flexible approach than
-that provided by Eq. 2.
+forecast variance (Figure 1). Analyzing only the main effects of each
+source of uncertainty would lead to the false conclusion that initial
+conditions uncertainty is not important. Progress in quantifying and
+partioning forecast uncertainty therefore requires a more flexible
+approach than that provided by Eq. 2.
+
+We have four objectives in this paper. First, we introduce a canonical
+equation for error propagation and review approaches for quantifying
+sources of forecast uncertainty from other fields. Second, we describe a
+general, simulation-based method for quantifying and partitioning
+forecast uncertainty from Bayesian state-space models. Third, we apply
+our method to near-term forecasts of the Yellowstone bison population
+and measlse cases in China. These two applications demonstrate the
+generality of our approach. Fourth, through our applications we
+introduce functions written in the statistical programming language R (R
+Core Team 2016), which can be used to implement our method for many
+Bayesian state-space models.
 
 \begin{figure}
 \centering
 \includegraphics{../figures/forecast_uncertainty_example.pdf}
 \caption{Example of forecast uncertainty with different sources of error
 set to zero. Each line represents one realization, out of 200, from an
-order-one autoregressive model (AR1 process). Contrary to the analytical
-expression (Eq. 2), initial conditions uncertainty and parameter
-uncertainty clearly interact. The spread of lines in (A) is not wholly
-because of initial conditions uncertainty (B) or parameter uncertainty
-(C), it is their combined influence that causes the spread of
-realizations in (A). At least in this example, process error (D) does
-appear to be independent, but we used a small value of process error to
-highlight other interactions. Source code:
-\texttt{generate\_forecast\_fxns.R}.}
+order-one autoregressive model (AR(1) process). Contrary to the
+analytical expression (Eq. 2), initial conditions (I.C.) uncertainty and
+parameter uncertainty clearly interact. The spread of lines in (A) is
+not wholly because of initial conditions uncertainty or parameter
+uncertainty (compare panels B and C). It is their combined influence
+that causes the spread of realizations in (A and D). At least in this
+example, process error (set to zero in D) does appear to be independent,
+but we used a small value of process error to highlight other
+interactions. Source code: \texttt{generate\_forecast\_fxns.R}.}
 \end{figure}
 
 \hypertarget{a-brief-history-of-quantifying-and-partitioning-forecast-uncertainty}{%
@@ -299,9 +314,9 @@ forecast uncertainty in practice. Thus, we present a simulation approach
 that is entirely model-based and requires no assumptions, other than
 those embedded in the model itself. We are building on the ideas put
 forth by Dietze (2017), who suggested a simulation approach for
-quantifying the terms in Eq. 2. Here we test the general idea using
-simulated data and extend the approach to consider interactions among
-sources of uncertainty.
+quantifying the terms in Eq. 2. Here we generalize the approach to fully
+partition forecast uncertainty among the main effects of different
+sources and their interactions.
 
 As a starting point, consider a generic Bayesian state-space model
 
@@ -575,14 +590,13 @@ Association 85:398--409.
 Hobbs, N. T., and M. B. Hooten. 2015. Bayesian Models: A Statistical
 Primer for Ecologists. Princeton University Press, Princeton.
 
+\leavevmode\hypertarget{ref-R2016}{}%
+R Core Team. 2016. R: A language and environment for statistical
+computing.
+
 \leavevmode\hypertarget{ref-Sobol1993}{}%
 Sobol', I. 1993. Sensitivity Estimates for Nonlinear Mathematical
 Models.
-
-\leavevmode\hypertarget{ref-Steffen2015}{}%
-Steffen, W., K. Richardson, J. Rockström, S. Cornell, I. Fetzer, E.
-Bennett, R. Biggs, and S. Carpenter. 2015. Planetary boundaries: Guiding
-human development on a changing planet. Science 348:1217.
 
 \leavevmode\hypertarget{ref-Williams2018}{}%
 Williams, P. J., M. B. Hooten, J. N. Womble, G. G. Esslinger, and M. R.

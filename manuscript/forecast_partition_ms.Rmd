@@ -55,16 +55,17 @@ We also provide functions written in the statistical programming language R, whi
 
 # Introduction
 
-A fundamental challenge facing society is to predict the ecological impacts of global environmental changes such as nitrogen deposition, climate change, and habitat fragmentation.
-Each of these global change drivers have now exceeded their historical ranges of variability [@Steffen2015], ushering in a no-analog era in which the past cannot predict the future.
-We can, however, look to the past to parameterize models that allow us to forecast the future states of ecological systems [@Clark2001; @Dietze2018].
+Ecology is entering an era of prediction.
+This new era is being made possible by continuous data streams (e.g., the National Ecological Observatory Network, citizen science data, remote sensing), an increased statistical literacy among ecologists, and the need to provide actionable information for decision makers [@Dietze2018].
+Thus, we are on the verge of answering Clark et al.'s [-@Clark2001] challenge to make forecasting a core goal of ecology.
 Ecologists are in an excellent position to meet this forecasting challenge because we have spent decades gaining understanding of the processes that regulate populations, communities, and ecosystems.
-However, we lack a systematic understanding of the current limits to ecological forecasts.
+But we lack a systematic understanding of the current limits to ecological forecasts.
 As a result, we do not know how to allocate research effort to improve our forecasts.
 
 Making poor forecasts is inevitable as ecology matures into a more predictive science.
 The key is to learn from our failures so that forecasts become more accurate over time.
 The success of meteorological forecasting tells us that basic research on the causes of forecast uncertainty is an essential component of this learning process [@Bauer2015].
+Therefore, we need a systematic and robust way to quantify and partition forecast uncertainty into its constituent parts [@Dietze2017a].
 
 Various approaches have been used to characterize and partition forecast uncertainty [@Sobol1993; @Cariboni2007].
 For example, consider a dynamic model designed to predict some state *y* in the future ($y_{t+1}$) based on the current state ($y_{t}$), an environmental driver(s) ($x$), parameters ($\theta$), and process error ($\epsilon$).
@@ -97,9 +98,18 @@ Knowing which term dominates forecast error in different ecological settings wil
 While having an analytical expression such as Eq. 2 is satisfying, arriving at the expression involves strict assumptions.
 First, Eq. 2 only holds when the underlying dynamics are linear, which may not be the case for many populations and models.
 Second, Eq. 2 only includes additive effects of each factor because the Taylor series decomposition requires small-variance approximations that eliminate interactions.
-But, interactions among the factors are probably commone.
+But, interactions among the factors are probably common.
 For example, in a simple simulation of an AR(1) process, we show that initial conditions uncertainty and parameter error interact to generate the full spread of forecast variance (Figure 1).
-Therefore, progress in quantifying and partioning forecast uncertainty requires a more flexible approach than that provided by Eq. 2.
+Analyzing only the main effects of each source of uncertainty would lead to the false conclusion that initial conditions uncertainty is not important.
+Progress in quantifying and partioning forecast uncertainty therefore requires a more flexible approach than that provided by Eq. 2.
+
+We have four objectives in this paper.
+First, we introduce a canonical equation for error propagation and review approaches for quantifying sources of forecast uncertainty from other fields.
+Second, we describe a general, simulation-based method for quantifying and partitioning forecast uncertainty from Bayesian state-space models.
+Third, we apply our method to near-term forecasts of the Yellowstone bison population and measlse cases in China.
+These two applications demonstrate the generality of our approach.
+Fourth, through our applications we introduce functions written in the statistical programming language R [@R2016], which can be used to implement our method for many Bayesian state-space models.
+
 
 <!-- Rarely will only a single term in Eq. 2 determine forecast variance, and the importance of each term might shift over time [@Dietze2017a]. -->
 <!-- For example, efforts to describe uncertainty in models of the global carbon cycle show that forecast variance from differences among carbon-emissions scenarios starts small but rises over time [@Lovenduski2017]. -->
@@ -108,7 +118,7 @@ Therefore, progress in quantifying and partioning forecast uncertainty requires 
 <!-- Simply relying on Eq. 2 could lead to a mischaracterization of the forces driving forecast uncertainty. -->
 <!-- Therefore, progress requires a practical approach that can partition the main effects and interactions of each term in Eq. 2. -->
 
-![ Example of forecast uncertainty with different sources of error set to zero. Each line represents one realization, out of 200, from an order-one autoregressive model (AR1 process). Contrary to the analytical expression (Eq. 2), initial conditions uncertainty and parameter uncertainty clearly interact. The spread of lines in (A) is not wholly because of initial conditions uncertainty (B) or parameter uncertainty (C), it is their combined influence that causes the spread of realizations in (A). At least in this example, process error (D) does appear to be independent, but we used a small value of process error to highlight other interactions. Source code: `generate_forecast_fxns.R`. ](../figures/forecast_uncertainty_example.pdf)
+![ Example of forecast uncertainty with different sources of error set to zero. Each line represents one realization, out of 200, from an order-one autoregressive model (AR(1) process). Contrary to the analytical expression (Eq. 2), initial conditions (I.C.) uncertainty and parameter uncertainty clearly interact. The spread of lines in (A) is not wholly because of initial conditions uncertainty or parameter uncertainty (compare panels B and C). It is their combined influence that causes the spread of realizations in (A and D). At least in this example, process error (set to zero in D) does appear to be independent, but we used a small value of process error to highlight other interactions. Source code: `generate_forecast_fxns.R`. ](../figures/forecast_uncertainty_example.pdf)
 
 # A Brief History of Quantifying and Partitioning Forecast Uncertainty
 
@@ -145,7 +155,7 @@ Two important assumptions are (1) that different sources of uncertainty do not i
 These analytical expressions are important for guiding our intuition, but these strict assumptions limit our ability to partition forecast uncertainty in practice.
 Thus, we present a simulation approach that is entirely model-based and requires no assumptions, other than those embedded in the model itself.
 We are building on the ideas put forth by @Dietze2017a, who suggested a simulation approach for quantifying the terms in Eq. 2.
-Here we test the general idea using simulated data and extend the approach to consider interactions among sources of uncertainty.
+Here we generalize the approach to fully partition forecast uncertainty among the main effects of different sources and their interactions.
 
 As a starting point, consider a generic Bayesian state-space model
 

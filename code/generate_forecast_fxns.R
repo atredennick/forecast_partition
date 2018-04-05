@@ -169,29 +169,29 @@ outcasts_noinit <- generate_forecast(z_bar,
 outcasts_combined <- as.data.frame(outcasts_all) %>%
   mutate(year = 0:n_times) %>%
   gather(key,value,-year) %>%
-  mutate(simulation = "A) All sources") %>%
+  mutate(simulation = "A) All sources of error") %>%
   rbind(as.data.frame(outcasts_noproc) %>%
           mutate(year = 0:n_times) %>%
           gather(key,value,-year) %>%
-          mutate(simulation = "D) No process error")) %>%
+          mutate(simulation = "D) I.C. and parameter error")) %>%
   rbind(as.data.frame(outcasts_noinit) %>%
           mutate(year = 0:n_times) %>%
           gather(key,value,-year) %>%
-          mutate(simulation = "B) No initial conditions error")) %>%
+          mutate(simulation = "B) Parameter and process error")) %>%
   rbind(as.data.frame(outcasts_noparam) %>%
           mutate(year = 0:n_times) %>%
           gather(key,value,-year) %>%
-          mutate(simulation = "C) No parameter error"))
+          mutate(simulation = "C) I.C. and process error"))
 
 ggplot(outcasts_combined, aes(x = year, y = value, group = key))+
-  geom_line(color = "darkgrey", alpha = 0.8)+
+  geom_line(color = "grey15", alpha = 0.8, size = 0.3)+
   facet_wrap(~simulation, ncol = 4)+
   scale_x_continuous(breaks = c(0,2,4,6,8,10))+
   ylab("State of interest")+
   xlab("Forecast year")+
   theme_few()+
   theme(axis.text.y = element_blank())
-# ggsave(filename = "../figures/forecast_uncertainty_example.pdf", width = 8.5, height = 3, units = "in")
+ggsave(filename = "../figures/forecast_uncertainty_example.pdf", width = 9, height = 3, units = "in")
 
 
 
