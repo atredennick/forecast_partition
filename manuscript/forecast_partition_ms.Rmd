@@ -1,6 +1,6 @@
 ---
 title: A simulation-based approach for quantifying and partitioning uncertainty to improve forecasts of dynamic processes
-author: Andrew T. Tredennick$^{1}$, Peter B. Adler$^1$, and others$^{2}$
+author: "Andrew T. Tredennick$^{1}$^[Corresponding author, Email:atredenn@gmail.com], Peter B. Adler$^1$, and others$^{2}$"
 csl: ecology.csl
 output:
   pdf_document:
@@ -37,6 +37,8 @@ bibliography: /Users/atredenn/Dropbox/Bibliography/ecocast.bib
 \noindent{}$^1$ Department of Wildland Resources and the Ecology Center, Utah State University, Logan, UT, United States
 
 \noindent{}$^2$ Department of somewhere
+
+<!-- \noindent{}\textbf{Corresponding author:} Andrew T. Tredennick (atredenn@gmail.com) -->
 
 # Abstract
 
