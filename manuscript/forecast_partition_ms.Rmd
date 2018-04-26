@@ -1,6 +1,6 @@
 ---
 title: A simulation-based approach for quantifying and partitioning uncertainty to improve forecasts of dynamic processes
-author: "Andrew T. Tredennick$^{1}$^[Corresponding author, Email:atredenn@gmail.com], Peter B. Adler$^1$, and others$^{2}$"
+author: "Andrew T. Tredennick$^{1}$^[Corresponding author, Email:atredenn@gmail.com], Mevin B. Hooten$^2$, Peter B. Adler$^1$, and others$^{3}$"
 csl: ecology.csl
 output:
   pdf_document:
@@ -9,9 +9,9 @@ output:
 geometry: left=1in, right=1in, top=1in, bottom=1in, headheight=12pt, letterpaper
 header-includes:
 - \usepackage[textsize=tiny,textwidth=2.1cm]{todonotes}
-- \usepackage{mathptmx}
 - \usepackage{upgreek}
 - \usepackage{bm}
+- \usepackage{amsmath}
 - \usepackage{setspace}
 - \usepackage{booktabs}
 - \doublespacing
@@ -36,7 +36,9 @@ bibliography: /Users/atredenn/Dropbox/Bibliography/ecocast.bib
 
 \noindent{}$^1$ Department of Wildland Resources and the Ecology Center, Utah State University, Logan, UT, United States
 
-\noindent{}$^2$ Department of somewhere
+\noindent{}$^3$ Department of Fish, Wildlife, and Conservation Biology; Department of Statistics; USGS; Colorado State University, Ft. Collins, CO, United States
+
+\noindent{}$^3$ Department of somewhere
 
 <!-- \noindent{}\textbf{Corresponding author:} Andrew T. Tredennick (atredenn@gmail.com) -->
 
@@ -58,7 +60,7 @@ We also provide functions written in the statistical programming language R, whi
 # Introduction
 
 Ecology is entering an era of prediction.
-This new era is being made possible by continuous data streams (e.g., the National Ecological Observatory Network, citizen science data, remote sensing), an increased statistical literacy among ecologists, and the need to provide actionable information for decision makers [@Dietze2018].
+This new era is made possible by continuous data streams (e.g., the National Ecological Observatory Network, citizen science data, remote sensing), increased statistical literacy among ecologists, and the need to provide actionable information for decision makers [@Dietze2018].
 Thus, we are on the verge of answering Clark et al.'s [-@Clark2001] challenge to make forecasting a core goal of ecology.
 Ecologists are in an excellent position to meet this forecasting challenge because we have spent decades gaining understanding of the processes that regulate populations, communities, and ecosystems.
 But we lack a systematic understanding of the current limits to ecological forecasts.
@@ -105,7 +107,7 @@ For example, in a simple simulation of an AR(1) process, we show that initial co
 Analyzing only the main effects of each source of uncertainty would lead to the false conclusion that initial conditions uncertainty is not important.
 Progress in quantifying and partioning forecast uncertainty therefore requires a more flexible approach than that provided by Eq. 2.
 
-We have four objectives in this paper.
+We have four objectives:
 First, we introduce a canonical equation for error propagation and review approaches for quantifying sources of forecast uncertainty from other fields.
 Second, we describe a general, simulation-based method for quantifying and partitioning forecast uncertainty from Bayesian state-space models.
 Third, we apply our method to near-term forecasts of the Yellowstone bison population and measlse cases in China.
@@ -159,7 +161,7 @@ Thus, we present a simulation approach that is entirely model-based and requires
 We are building on the ideas put forth by @Dietze2017a, who suggested a simulation approach for quantifying the terms in Eq. 2.
 Here we generalize the approach to fully partition forecast uncertainty among the main effects of different sources and their interactions.
 
-As a starting point, consider a generic Bayesian state-space model
+As a starting point, consider the Bayesian state-space model
 
 \begin{equation}
 \begin{aligned}[b]
@@ -170,7 +172,7 @@ As a starting point, consider a generic Bayesian state-space model
 \end{aligned}
 \end{equation}
 
-\noindent{}where $y_t$ is the observed state at time *t*, $z_t$ is the latent state at time *t*, $\mu_t$ is the determinstic prediction of *z* at time *t* from the process model *g*, which is a function of *z* at time *t-1*, a vector of covariates (**x**) at time *t*, and a set of unknown parameters, $\bm{\uptheta}$.
+\noindent{}where $y_t$ is the observed state at time *t*, $z_t$ is the latent state at time *t*, $\mu_t$ is the determinstic prediction of *z* at time *t* from the process model *g*, which is a function of *z* at time *t-1*, a vector of covariates (**x**) at time *t*, and a set of unknown parameters, $\bm{\uptheta}$ [@Berliner1996].
 $\sigma^2_{\text{o}}$ is observation error and $\sigma^2_{\text{p}}$ is process error.
 The notation $\left[a \;|\; b, c\right]$ reads, "the probability of *a* given *b* and *c*" [@Gelfand1990], and $\bm{\upphi}$ refers to the prior probability distributions for all unknown parameters and the initial conditions for the latent state, $z_{t=1}$.
 
@@ -183,7 +185,7 @@ This is referred to as the forecast distribution or the predictive process distr
 \end{gathered}
 \end{equation}
 
-The model in Eq. 5 can be fit using Markov chain Monte carlo (MCMC) algorithms, which makes calculating the forecast distribution a relatively simple task.
+The model in Eq. 5 can be fit using Markov chain Monte Carlo (MCMC) algorithms, which makes calculating the forecast distribution a relatively simple task.
 To obtain $\left[z_{T+1} | y_1,\dots,y_T \right]$, we can change the indexing of *t* in Eq. 5 to $t = 2,\dots,T+1$ and then sample $z_{T+1}^{(k)}$ from $\left[z_{T+1} | g(z_T^{(k)}, \textbf{x}_{T+1}^{(j(k))}, \bm{\uptheta}^{(k)}), \sigma^{2(k)}_{\text{p}} \right]$ given the current values for $\bm{\uptheta}^{(k)}$ and $z_{T}^{(k)}$ on each $k = 1,\dots,K$ iteration of the MCMC algorithm [@Hobbs2015; @Williams2018].
 Note that we index the external covariate vector **x** using *j* and *k*, where *j(k)* is realization *j* of the covariate vector **x** associated with MCMC sample *k*.
 In some cases, the external covariate will have only one value, in which case all *K* MCMC samples will share the same **x**.
@@ -199,14 +201,22 @@ If we wish to ignore initial conditions uncertainty (I.C. uncertainty), we can m
 z_{T}^{(*)} = E(z_{T} | y_1,\dots,y_T) \approx \frac{\sum^K_{k=1} z_{T}^{(k)}}{K},
 \end{equation}
 
-\noindent{}which we call $z^{(*)}_T$ (as opposed to $z^{(k)}_T$), while retaining the uncertainty around all other parameters.
+\noindent{}which we call $z^{(*)}_T$ (as opposed to $z^{(k)}_T$), while retaining the uncertainty for all other parameters.
 Our iterative sampling to obtain the forecast distribution then becomes a conditional statement,
 
+<!-- \begin{equation} -->
+<!-- \begin{aligned}[b] -->
+<!-- z_{T+q} &\sim \left[z_{T+q} | g(z_{T+q-1}^{(k)}, \textbf{x}_T^{(j(k))}, \bm{\uptheta}^{(k)}), \sigma^{2(k)}_{\text{p}} \right], &q>1 \\ -->
+<!-- z_{T+q} &\sim \left[z_{T+q} | g(z_{T}^{(*)}, \textbf{x}_T^{(j(k))}, \bm{\uptheta}^{(k)}), \sigma^{2(k)}_{\text{p}} \right], &q=1. -->
+<!-- \end{aligned} -->
+<!-- \end{equation} -->
+
 \begin{equation}
-\begin{aligned}[b]
-z_{T+q} &\sim \left[z_{T+q} | g(z_{T+q-1}^{(k)}, \textbf{x}_T^{(j(k))}, \bm{\uptheta}^{(k)}), \sigma^{2(k)}_{\text{p}} \right], &q>1 \\
-z_{T+q} &\sim \left[z_{T+q} | g(z_{T}^{(*)}, \textbf{x}_T^{(j(k))}, \bm{\uptheta}^{(k)}), \sigma^{2(k)}_{\text{p}} \right], &q=1.
-\end{aligned}
+    z_{T+q} \sim 
+\begin{cases}
+    \left[z_{T+q} | g(z_{T+q-1}^{(k)}, \textbf{x}_T^{(j(k))}, \bm{\uptheta}^{(k)}), \sigma^{2(k)}_{\text{p}} \right], &q>1 \\
+    \left[z_{T+q} | g(z_{T}^{(*)}, \textbf{x}_T^{(j(k))}, \bm{\uptheta}^{(k)}), \sigma^{2(k)}_{\text{p}} \right], &q=1.
+\end{cases}
 \end{equation}
 
 \noindent{}We can extend the basic idea of setting subsets of parameters and states to their posterior means (or medians, depending on the distribution) to make partitioned forecasts where only prescribed sources of uncertainty contribute to forecast uncertainty (Table 1).
