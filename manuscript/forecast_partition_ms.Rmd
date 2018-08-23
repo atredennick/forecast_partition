@@ -1,6 +1,6 @@
 ---
 title: A simulation-based approach for quantifying and partitioning uncertainty to improve forecasts of dynamic processes
-author: "Andrew T. Tredennick$^{1}$^[Corresponding author, Email:atredenn@gmail.com], Mevin B. Hooten$^2$, Peter B. Adler$^1$, and others$^{3}$"
+author: "Andrew T. Tredennick$^{1,2}$^[Corresponding author, Email: atredenn@gmail.com], Mevin B. Hooten$^3$, Peter B. Adler$^4$, and others$^{5}$"
 csl: ecology.csl
 output:
   pdf_document:
@@ -34,11 +34,15 @@ bibliography: /Users/atredenn/Dropbox/Bibliography/ecocast.bib
 \raggedright
 \setlength{\parindent}{36pt}
 
-\noindent{}$^1$ Department of Wildland Resources and the Ecology Center, Utah State University, Logan, UT, United States
+\noindent{}$^1$ Odum School of Ecology, University of Georgia, Athens, GA, United States
+
+\noindent{}$^2$ Center for the Ecology of Infectious Diseases, University of Georgia, Athens, GA, United States
 
 \noindent{}$^3$ Department of Fish, Wildlife, and Conservation Biology; Department of Statistics; USGS; Colorado State University, Ft. Collins, CO, United States
 
-\noindent{}$^3$ Department of somewhere
+\noindent{}$^4$ Department of Wildland Resources and the Ecology Center, Utah State University, Logan, UT, United States
+
+\noindent{}$^5$ Department of somewhere
 
 <!-- \noindent{}\textbf{Corresponding author:} Andrew T. Tredennick (atredenn@gmail.com) -->
 
@@ -72,14 +76,14 @@ The success of meteorological forecasting tells us that basic research on the ca
 Therefore, we need a systematic and robust way to quantify and partition forecast uncertainty into its constituent parts [@Dietze2017a].
 
 Various approaches have been used to characterize and partition forecast uncertainty [@Sobol1993; @Cariboni2007].
-For example, consider a dynamic model designed to predict some state *y* in the future ($y_{t+1}$) based on the current state ($y_{t}$), an environmental driver(s) ($x$), parameters ($\theta$), and process error ($\epsilon$).
+For example, consider a dynamic model designed to predict some state *y* in the future ($y_{t+1}$) based on the current state ($y_{t}$), an environmental driver(s) ($x$), parameters ($\theta$), and process error ($\varepsilon$).
 We can then write a general form of the model as:
 
 \begin{align}
-y_{t+1} = f(y_t, x_t|\theta) + \epsilon_{t+1},
+y_{t+1} = f(y_t, x_t|\theta) + \varepsilon_{t+1},
 \end{align}
 
-\noindent{}which states that $y$ at time $t+1$ is a function of $y$ and $x$ at time $t$ conditional on the model parameters ($\theta$) plus process error ($\epsilon$).
+\noindent{}which states that $y$ at time $t+1$ is a function of $y$ and $x$ at time $t$ conditional on the model parameters ($\theta$) plus process error ($\varepsilon$).
 Ignoring covariance among factors and assuming linear dynamics, @Dietze2017a, following @Sobol1993 and @Cariboni2007, suggests that forecast variance ($Var[y_{t+1}]$) is approximately:
 
 \begin{align}
@@ -89,7 +93,7 @@ Var[y_{t+1}] \approx \underbrace{\left(\frac{\delta f}{\delta y} \right)^2}_{\te
                \underbrace{\vphantom{ \left(\frac{\delta f}{\delta y} \right)^2 } Var[x_t]}_{\text{driver uncert.}} +
                \underbrace{\vphantom{ \left(\frac{\delta f}{\delta y} \right)^2 }\left(\frac{\delta f}{\delta \theta} \right)^2}_{\text{param sens.}}
                \underbrace{\vphantom{ \left(\frac{\delta f}{\delta y} \right)^2 } Var[\theta]}_{\text{param. uncert.}} +
-               \underbrace{\vphantom{ \left(\frac{\delta f}{\delta y} \right)^2 } Var[\epsilon_{t+1}]}_{\text{process error}},
+               \underbrace{\vphantom{ \left(\frac{\delta f}{\delta y} \right)^2 } Var[\varepsilon_{t+1}]}_{\text{process error}},
 \end{align}
 
 \noindent{}where each additive term follows a pattern of *sensitivity* times *variance* and "IC uncert." refers to "*I*nitial *C*onditions uncertainty."
@@ -259,23 +263,23 @@ $V_{T+q}^{(I)}$, $V_{T+q}^{(PA)}$, $V_{T+q}^{(D)}$, and $V_{T+q}^{(PS)}$ are the
 \begin{equation}
 \begin{aligned}[b]
 V_{T+q}^{(F)} = \ &V_{T+q}^{(I)} + V_{T+q}^{(PA)} + V_{T+q}^{(D)} + V_{T+q}^{(PS)} \\
-&+ \epsilon_{T+q}^{(I,PA)} + \epsilon_{T+q}^{(I,D)} + \epsilon_{T+q}^{(I,PS)} + \epsilon_{T+q}^{(PA,PS)} + \epsilon_{T+q}^{(PA,D)} + \epsilon_{T+q}^{(D,PS)} \\
-&+ \epsilon_{T+q}^{(I,PA,D)} + \epsilon_{T+q}^{(I,PA,PS)} + \epsilon_{T+q}^{(I,D,PS)} + \epsilon_{T+q}^{(PA,D,PS)} \\
-&+ \epsilon_{T+q}^{(I,PA,D,PS)},
+&+ \varepsilon_{T+q}^{(I,PA)} + \varepsilon_{T+q}^{(I,D)} + \varepsilon_{T+q}^{(I,PS)} + \varepsilon_{T+q}^{(PA,PS)} + \varepsilon_{T+q}^{(PA,D)} + \varepsilon_{T+q}^{(D,PS)} \\
+&+ \varepsilon_{T+q}^{(I,PA,D)} + \varepsilon_{T+q}^{(I,PA,PS)} + \varepsilon_{T+q}^{(I,D,PS)} + \varepsilon_{T+q}^{(PA,D,PS)} \\
+&+ \varepsilon_{T+q}^{(I,PA,D,PS)},
 \end{aligned}
 \end{equation}
 
-\noindent{}where the notation $\epsilon_{T+q}^{(X,Y)}$ represents the remaining interactive effect of $X$ and $Y$ on $V_{T+q}^{(F)}$ after accounting for their main effects.
+\noindent{}where the notation $\varepsilon_{T+q}^{(X,Y)}$ represents the remaining interactive effect of $X$ and $Y$ on $V_{T+q}^{(F)}$ after accounting for their main effects.
 For example, if the full forecast variance is a function of only initial conditions uncertainty *I* and parameter uncertainty *PA*, then
 
 \begin{equation}
-V^{(F)}_{T+q} = V^{(I)}_{T+q} + V^{(PA)}_{T+q} + \epsilon_{T+q}^{(I,PA)},
+V^{(F)}_{T+q} = V^{(I)}_{T+q} + V^{(PA)}_{T+q} + \varepsilon_{T+q}^{(I,PA)},
 \end{equation}
 
 \noindent{}which rearranges to
 
 \begin{equation}
-\epsilon_{T+q}^{(I,PA)} = V^{(F)}_{T+q} - \left[ V^{(I)}_{T+q} + V^{(PA)}_{T+q} \right].
+\varepsilon_{T+q}^{(I,PA)} = V^{(F)}_{T+q} - \left[ V^{(I)}_{T+q} + V^{(PA)}_{T+q} \right].
 \end{equation}
 
 \noindent{}We show an example of applying Eqs. 10-11 in a hypothetical situation where forecast uncertainty is determined by initial conditions uncertainty and parameter uncertainty alone in Figure 2.
@@ -285,18 +289,18 @@ To take this one step further, and to reiterate the core idea, let $V(F)$ be a f
 We can then write the equation for forecast uncertainty and the derived interaction \smalltodo{There must be a way to write a concise form of these equations vai summations.}effects as
 
 \begin{align}
-V^{(F)}_{T+q} &= V^{(I)}_{T+q} + V^{(PA)}_{T+q} + V^{(D)}_{T+q} + \epsilon^{(I,PA)}_{T+q} + \epsilon^{(I,D)}_{T+q} + \epsilon^{(D,PA)}_{T+q} + \epsilon^{(I,PA,D)}_{T+q}, \qquad \text{where} \\
-\epsilon^{(I,PA)}_{T+q} &= V^{(I+PA)}_{T+q} - \left[V^{(I)}_{T+q} + V^{(PA)}_{T+q}\right] \\
-\epsilon^{(I,D)}_{T+q} &= V^{(I+D)}_{T+q} - \left[V^{(I)}_{T+q} + V^{(D)}_{T+q}\right] \\
-\epsilon^{(PA,D)}_{T+q} &= V^{(PA+D)}_{T+q} - \left[V^{(PA)}_{T+q} + V^{(D)}_{T+q}\right] \\
-\epsilon^{(I,PA,D)}_{T+q} &= V^{(F)}_{T+q} - \left[V^{(I)}_{T+q} + V^{(PA)}_{T+q} + V^{(D)}_{T+q}\right] - \left[\epsilon^{(I,PA)}_{T+q} + \epsilon^{(I,D)}_{T+q} + \epsilon^{(PA,D)}_{T+q} \right],
+V^{(F)}_{T+q} &= V^{(I)}_{T+q} + V^{(PA)}_{T+q} + V^{(D)}_{T+q} + \varepsilon^{(I,PA)}_{T+q} + \varepsilon^{(I,D)}_{T+q} + \varepsilon^{(D,PA)}_{T+q} + \varepsilon^{(I,PA,D)}_{T+q}, \qquad \text{where} \\
+\varepsilon^{(I,PA)}_{T+q} &= V^{(I+PA)}_{T+q} - \left[V^{(I)}_{T+q} + V^{(PA)}_{T+q}\right] \\
+\varepsilon^{(I,D)}_{T+q} &= V^{(I+D)}_{T+q} - \left[V^{(I)}_{T+q} + V^{(D)}_{T+q}\right] \\
+\varepsilon^{(PA,D)}_{T+q} &= V^{(PA+D)}_{T+q} - \left[V^{(PA)}_{T+q} + V^{(D)}_{T+q}\right] \\
+\varepsilon^{(I,PA,D)}_{T+q} &= V^{(F)}_{T+q} - \left[V^{(I)}_{T+q} + V^{(PA)}_{T+q} + V^{(D)}_{T+q}\right] - \left[\varepsilon^{(I,PA)}_{T+q} + \varepsilon^{(I,D)}_{T+q} + \varepsilon^{(PA,D)}_{T+q} \right],
 \end{align}
 
 \noindent{}where the notation $V^{(A+B)}_{T+q}$ is the forecast variance under scenario where both *A* and *B* are allowed to contribute to forecast uncertainty (i.e., a combination of the equations in Table 1).
 We present the equations for the full partition among *I*, *PA*, *D*, and *PS* in Appendix 1.
 In the next two sections, we apply our approach (Box 1) to quantify and partition the uncertainty of near-term forecasts of the Yellowstone bison population and measles cases in China.
 
-![ Graphical example of partitioning forecast uncertainty into main effects ($V$) and interaction effects ($\epsilon$). The grey shaded area shows the interaction effect ($\epsilon^{(I,PA)}$) that must be accounted for to fully partition forecast uncertainty between initial conditions uncertainty ($V^{(I)}$) and parameter uncertainty ($V^{(PA)}$). Source code: `generate_forecast_fxns.R`. ](../figures/example_interaction_effect.pdf){ height=3in }
+![ Graphical example of partitioning forecast uncertainty into main effects ($V$) and interaction effects ($\varepsilon$). The grey shaded area shows the interaction effect ($\varepsilon^{(I,PA)}$) that must be accounted for to fully partition forecast uncertainty between initial conditions uncertainty ($V^{(I)}$) and parameter uncertainty ($V^{(PA)}$). Source code: `generate_forecast_fxns.R`. ](../figures/example_interaction_effect.pdf){ height=3in }
 
 \begin{Box}
   \renewcommand{\arraystretch}{1.04}
@@ -324,7 +328,7 @@ In the next two sections, we apply our approach (Box 1) to quantify and partitio
 # Discussion
 
 # Acknowledgements
-This research was funded by National Science Foundation grants DEB-1353078 (awarded to PBA) and DEB-1353039 (awarded to Stephen P. Ellner and Giles Hooker).
+This research was funded by National Science Foundation grant DEB-1353078 (awarded to PBA).
 
 \setlength{\parindent}{0pt}
 

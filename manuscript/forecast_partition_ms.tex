@@ -25,7 +25,7 @@
 \usepackage{hyperref}
 \hypersetup{unicode=true,
             pdftitle={A simulation-based approach for quantifying and partitioning uncertainty to improve forecasts of dynamic processes},
-            pdfauthor={Andrew T. Tredennick\^{}\{1\}, Mevin B. Hooten\^{}2, Peter B. Adler\^{}1, and others\^{}\{3\}},
+            pdfauthor={Andrew T. Tredennick\^{}\{1,2\}, Mevin B. Hooten\^{}3, Peter B. Adler\^{}4, and others\^{}\{5\}},
             pdfborder={0 0 0},
             breaklinks=true}
 \urlstyle{same}  % don't use monospace font for urls
@@ -77,9 +77,9 @@
 to improve forecasts of dynamic processes}
   \pretitle{\vspace{\droptitle}\centering\huge}
   \posttitle{\par}
-  \author{Andrew T. Tredennick\(^{1}\)\footnote{Corresponding author,
-  Email:\href{mailto:atredenn@gmail.com}{\nolinkurl{atredenn@gmail.com}}},
-Mevin B. Hooten\(^2\), Peter B. Adler\(^1\), and others\(^{3}\)}
+  \author{Andrew T. Tredennick\(^{1,2}\)\footnote{Corresponding author, Email:
+  \href{mailto:atredenn@gmail.com}{\nolinkurl{atredenn@gmail.com}}},
+Mevin B. Hooten\(^3\), Peter B. Adler\(^4\), and others\(^{5}\)}
   \preauthor{\centering\large\emph}
   \postauthor{\par}
   \date{}
@@ -108,14 +108,20 @@ Mevin B. Hooten\(^2\), Peter B. Adler\(^1\), and others\(^{3}\)}
     {\todo[caption={#2}, #1]
     {\begin{spacing}{0.5}#2\end{spacing}}}\setlength{\abovedisplayskip}{0pt}\raggedright\setlength{\parindent}{36pt}
 
-\noindent{}\(^1\) Department of Wildland Resources and the Ecology
-Center, Utah State University, Logan, UT, United States
+\noindent{}\(^1\) Odum School of Ecology, University of Georgia, Athens,
+GA, United States
+
+\noindent{}\(^2\) Center for the Ecology of Infectious Diseases,
+University of Georgia, Athens, GA, United States
 
 \noindent{}\(^3\) Department of Fish, Wildlife, and Conservation
 Biology; Department of Statistics; USGS; Colorado State University, Ft.
 Collins, CO, United States
 
-\noindent{}\(^3\) Department of somewhere
+\noindent{}\(^4\) Department of Wildland Resources and the Ecology
+Center, Utah State University, Logan, UT, United States
+
+\noindent{}\(^5\) Department of somewhere
 
 \hypertarget{abstract}{%
 \section{Abstract}\label{abstract}}
@@ -182,15 +188,15 @@ uncertainty (Sobol' 1993, Cariboni et al. 2007). For example, consider a
 dynamic model designed to predict some state \emph{y} in the future
 (\(y_{t+1}\)) based on the current state (\(y_{t}\)), an environmental
 driver(s) (\(x\)), parameters (\(\theta\)), and process error
-(\(\epsilon\)). We can then write a general form of the model as:
+(\(\varepsilon\)). We can then write a general form of the model as:
 
 \begin{align}
-y_{t+1} = f(y_t, x_t|\theta) + \epsilon_{t+1},
+y_{t+1} = f(y_t, x_t|\theta) + \varepsilon_{t+1},
 \end{align}
 
 \noindent{}which states that \(y\) at time \(t+1\) is a function of
 \(y\) and \(x\) at time \(t\) conditional on the model parameters
-(\(\theta\)) plus process error (\(\epsilon\)). Ignoring covariance
+(\(\theta\)) plus process error (\(\varepsilon\)). Ignoring covariance
 among factors and assuming linear dynamics, Dietze (2017), following
 Sobol' (1993) and Cariboni et al. (2007), suggests that forecast
 variance (\(Var[y_{t+1}]\)) is approximately:
@@ -202,7 +208,7 @@ Var[y_{t+1}] \approx \underbrace{\left(\frac{\delta f}{\delta y} \right)^2}_{\te
                \underbrace{\vphantom{ \left(\frac{\delta f}{\delta y} \right)^2 } Var[x_t]}_{\text{driver uncert.}} +
                \underbrace{\vphantom{ \left(\frac{\delta f}{\delta y} \right)^2 }\left(\frac{\delta f}{\delta \theta} \right)^2}_{\text{param sens.}}
                \underbrace{\vphantom{ \left(\frac{\delta f}{\delta y} \right)^2 } Var[\theta]}_{\text{param. uncert.}} +
-               \underbrace{\vphantom{ \left(\frac{\delta f}{\delta y} \right)^2 } Var[\epsilon_{t+1}]}_{\text{process error}},
+               \underbrace{\vphantom{ \left(\frac{\delta f}{\delta y} \right)^2 } Var[\varepsilon_{t+1}]}_{\text{process error}},
 \end{align}
 
 \noindent{}where each additive term follows a pattern of
@@ -468,26 +474,26 @@ distribution such that
 \begin{equation}
 \begin{aligned}[b]
 V_{T+q}^{(F)} = \ &V_{T+q}^{(I)} + V_{T+q}^{(PA)} + V_{T+q}^{(D)} + V_{T+q}^{(PS)} \\
-&+ \epsilon_{T+q}^{(I,PA)} + \epsilon_{T+q}^{(I,D)} + \epsilon_{T+q}^{(I,PS)} + \epsilon_{T+q}^{(PA,PS)} + \epsilon_{T+q}^{(PA,D)} + \epsilon_{T+q}^{(D,PS)} \\
-&+ \epsilon_{T+q}^{(I,PA,D)} + \epsilon_{T+q}^{(I,PA,PS)} + \epsilon_{T+q}^{(I,D,PS)} + \epsilon_{T+q}^{(PA,D,PS)} \\
-&+ \epsilon_{T+q}^{(I,PA,D,PS)},
+&+ \varepsilon_{T+q}^{(I,PA)} + \varepsilon_{T+q}^{(I,D)} + \varepsilon_{T+q}^{(I,PS)} + \varepsilon_{T+q}^{(PA,PS)} + \varepsilon_{T+q}^{(PA,D)} + \varepsilon_{T+q}^{(D,PS)} \\
+&+ \varepsilon_{T+q}^{(I,PA,D)} + \varepsilon_{T+q}^{(I,PA,PS)} + \varepsilon_{T+q}^{(I,D,PS)} + \varepsilon_{T+q}^{(PA,D,PS)} \\
+&+ \varepsilon_{T+q}^{(I,PA,D,PS)},
 \end{aligned}
 \end{equation}
 
-\noindent{}where the notation \(\epsilon_{T+q}^{(X,Y)}\) represents the
-remaining interactive effect of \(X\) and \(Y\) on \(V_{T+q}^{(F)}\)
+\noindent{}where the notation \(\varepsilon_{T+q}^{(X,Y)}\) represents
+the remaining interactive effect of \(X\) and \(Y\) on \(V_{T+q}^{(F)}\)
 after accounting for their main effects. For example, if the full
 forecast variance is a function of only initial conditions uncertainty
 \emph{I} and parameter uncertainty \emph{PA}, then
 
 \begin{equation}
-V^{(F)}_{T+q} = V^{(I)}_{T+q} + V^{(PA)}_{T+q} + \epsilon_{T+q}^{(I,PA)},
+V^{(F)}_{T+q} = V^{(I)}_{T+q} + V^{(PA)}_{T+q} + \varepsilon_{T+q}^{(I,PA)},
 \end{equation}
 
 \noindent{}which rearranges to
 
 \begin{equation}
-\epsilon_{T+q}^{(I,PA)} = V^{(F)}_{T+q} - \left[ V^{(I)}_{T+q} + V^{(PA)}_{T+q} \right].
+\varepsilon_{T+q}^{(I,PA)} = V^{(F)}_{T+q} - \left[ V^{(I)}_{T+q} + V^{(PA)}_{T+q} \right].
 \end{equation}
 
 \noindent{}We show an example of applying Eqs. 10-11 in a hypothetical
@@ -505,11 +511,11 @@ equation for forecast uncertainty and the derived interaction
 as
 
 \begin{align}
-V^{(F)}_{T+q} &= V^{(I)}_{T+q} + V^{(PA)}_{T+q} + V^{(D)}_{T+q} + \epsilon^{(I,PA)}_{T+q} + \epsilon^{(I,D)}_{T+q} + \epsilon^{(D,PA)}_{T+q} + \epsilon^{(I,PA,D)}_{T+q}, \qquad \text{where} \\
-\epsilon^{(I,PA)}_{T+q} &= V^{(I+PA)}_{T+q} - \left[V^{(I)}_{T+q} + V^{(PA)}_{T+q}\right] \\
-\epsilon^{(I,D)}_{T+q} &= V^{(I+D)}_{T+q} - \left[V^{(I)}_{T+q} + V^{(D)}_{T+q}\right] \\
-\epsilon^{(PA,D)}_{T+q} &= V^{(PA+D)}_{T+q} - \left[V^{(PA)}_{T+q} + V^{(D)}_{T+q}\right] \\
-\epsilon^{(I,PA,D)}_{T+q} &= V^{(F)}_{T+q} - \left[V^{(I)}_{T+q} + V^{(PA)}_{T+q} + V^{(D)}_{T+q}\right] - \left[\epsilon^{(I,PA)}_{T+q} + \epsilon^{(I,D)}_{T+q} + \epsilon^{(PA,D)}_{T+q} \right],
+V^{(F)}_{T+q} &= V^{(I)}_{T+q} + V^{(PA)}_{T+q} + V^{(D)}_{T+q} + \varepsilon^{(I,PA)}_{T+q} + \varepsilon^{(I,D)}_{T+q} + \varepsilon^{(D,PA)}_{T+q} + \varepsilon^{(I,PA,D)}_{T+q}, \qquad \text{where} \\
+\varepsilon^{(I,PA)}_{T+q} &= V^{(I+PA)}_{T+q} - \left[V^{(I)}_{T+q} + V^{(PA)}_{T+q}\right] \\
+\varepsilon^{(I,D)}_{T+q} &= V^{(I+D)}_{T+q} - \left[V^{(I)}_{T+q} + V^{(D)}_{T+q}\right] \\
+\varepsilon^{(PA,D)}_{T+q} &= V^{(PA+D)}_{T+q} - \left[V^{(PA)}_{T+q} + V^{(D)}_{T+q}\right] \\
+\varepsilon^{(I,PA,D)}_{T+q} &= V^{(F)}_{T+q} - \left[V^{(I)}_{T+q} + V^{(PA)}_{T+q} + V^{(D)}_{T+q}\right] - \left[\varepsilon^{(I,PA)}_{T+q} + \varepsilon^{(I,D)}_{T+q} + \varepsilon^{(PA,D)}_{T+q} \right],
 \end{align}
 
 \noindent{}where the notation \(V^{(A+B)}_{T+q}\) is the forecast
@@ -525,8 +531,8 @@ population and measles cases in China.
 \centering
 \includegraphics[width=\textwidth,height=3in]{../figures/example_interaction_effect.pdf}
 \caption{Graphical example of partitioning forecast uncertainty into
-main effects (\(V\)) and interaction effects (\(\epsilon\)). The grey
-shaded area shows the interaction effect (\(\epsilon^{(I,PA)}\)) that
+main effects (\(V\)) and interaction effects (\(\varepsilon\)). The grey
+shaded area shows the interaction effect (\(\varepsilon^{(I,PA)}\)) that
 must be accounted for to fully partition forecast uncertainty between
 initial conditions uncertainty (\(V^{(I)}\)) and parameter uncertainty
 (\(V^{(PA)}\)). Source code: \texttt{generate\_forecast\_fxns.R}.}
@@ -561,9 +567,8 @@ China}\label{application-measles-in-china}}
 \hypertarget{acknowledgements}{%
 \section{Acknowledgements}\label{acknowledgements}}
 
-This research was funded by National Science Foundation grants
-DEB-1353078 (awarded to PBA) and DEB-1353039 (awarded to Stephen P.
-Ellner and Giles Hooker).
+This research was funded by National Science Foundation grant
+DEB-1353078 (awarded to PBA).
 
 \setlength{\parindent}{0pt}
 
