@@ -25,7 +25,7 @@
 \usepackage{hyperref}
 \hypersetup{unicode=true,
             pdftitle={A simulation-based approach for quantifying and partitioning uncertainty to improve forecasts of dynamic processes},
-            pdfauthor={Andrew T. Tredennick\^{}\{1,2\}, Mevin B. Hooten\^{}3, Peter B. Adler\^{}4, and others\^{}\{5\}},
+            pdfauthor={Andrew T. Tredennick\^{}\{1,2\}},
             pdfborder={0 0 0},
             breaklinks=true}
 \urlstyle{same}  % don't use monospace font for urls
@@ -73,18 +73,18 @@
 }
 
 \setlength{\droptitle}{-2em}
+
   \title{A simulation-based approach for quantifying and partitioning uncertainty
 to improve forecasts of dynamic processes}
-  \pretitle{\vspace{\droptitle}\centering\huge}
+    \pretitle{\vspace{\droptitle}\centering\huge}
   \posttitle{\par}
-  \author{Andrew T. Tredennick\(^{1,2}\)\footnote{Corresponding author, Email:
-  \href{mailto:atredenn@gmail.com}{\nolinkurl{atredenn@gmail.com}}},
-Mevin B. Hooten\(^3\), Peter B. Adler\(^4\), and others\(^{5}\)}
-  \preauthor{\centering\large\emph}
+    \author{Andrew T. Tredennick\(^{1,2}\)\footnote{Corresponding author, Email:
+  \href{mailto:atredenn@gmail.com}{\nolinkurl{atredenn@gmail.com}}}}
+    \preauthor{\centering\large\emph}
   \postauthor{\par}
-  \date{}
-  \predate{}\postdate{}
-
+    \date{}
+    \predate{}\postdate{}
+  
 \usepackage[textsize=tiny,textwidth=2.1cm]{todonotes}
 \usepackage{upgreek}
 \usepackage{bm}
@@ -100,13 +100,17 @@ Mevin B. Hooten\(^3\), Peter B. Adler\(^4\), and others\(^{5}\)}
 \floatstyle{boxed}
 \newfloat{Box}{tbph}{box}
 \floatsetup[table]{capposition=top}
+\usepackage{mathptmx}
 
 \begin{document}
 \maketitle
 
 \newcommand{\smalltodo}[2][]
     {\todo[caption={#2}, #1]
-    {\begin{spacing}{0.5}#2\end{spacing}}}\setlength{\abovedisplayskip}{0pt}\raggedright\setlength{\parindent}{36pt}
+    {\begin{spacing}{0.5}#2\end{spacing}}}
+
+\setlength{\abovedisplayskip}{0pt} \raggedright
+\setlength{\parindent}{36pt}
 
 \noindent{}\(^1\) Odum School of Ecology, University of Georgia, Athens,
 GA, United States
@@ -114,17 +118,7 @@ GA, United States
 \noindent{}\(^2\) Center for the Ecology of Infectious Diseases,
 University of Georgia, Athens, GA, United States
 
-\noindent{}\(^3\) Department of Fish, Wildlife, and Conservation
-Biology; Department of Statistics; USGS; Colorado State University, Ft.
-Collins, CO, United States
-
-\noindent{}\(^4\) Department of Wildland Resources and the Ecology
-Center, Utah State University, Logan, UT, United States
-
-\noindent{}\(^5\) Department of somewhere
-
-\hypertarget{abstract}{%
-\section{Abstract}\label{abstract}}
+\section{Abstract}\label{abstract}
 
 Making informed decisions in the face of rapid environmental change
 requires forecasts from models of ecological processes. However,
@@ -148,7 +142,7 @@ the total variance of a forecast is paritioned among its constituent
 parts, namely initial conditions uncertainty, parameter uncertainty,
 driver uncertainty, process error, and their interactions. We apply the
 approach to near-term forecasts of the Yellowstone bison population and
-measles in China, demonstrating the broad utility of our approach. We
+measles in Niger, demonstrating the broad utility of our approach. We
 also provide functions written in the statistical programming language
 R, which will allow others using Bayesian state-space models to employ
 our approach in their own research.
@@ -157,8 +151,7 @@ our approach in their own research.
 Carlo, measles, prediction, population model, uncertainty, Yellowstone
 bison}
 
-\hypertarget{introduction}{%
-\section{Introduction}\label{introduction}}
+\section{Introduction}\label{introduction}
 
 Ecology is entering an era of prediction. This new era is made possible
 by continuous data streams (e.g., the National Ecological Observatory
@@ -202,13 +195,13 @@ Sobol' (1993) and Cariboni et al. (2007), suggests that forecast
 variance (\(Var[y_{t+1}]\)) is approximately:
 
 \begin{align}
-Var[y_{t+1}] \approx \underbrace{\left(\frac{\delta f}{\delta y} \right)^2}_{\text{stability}} 
-               \underbrace{\vphantom{ \left(\frac{\delta f}{\delta y} \right)^2 } Var[y_t]}_{\text{IC uncert.}} +
-               \underbrace{\vphantom{ \left(\frac{\delta f}{\delta y} \right)^2 }\left(\frac{\delta f}{\delta x} \right)^2}_{\text{driver sens.}} 
-               \underbrace{\vphantom{ \left(\frac{\delta f}{\delta y} \right)^2 } Var[x_t]}_{\text{driver uncert.}} +
-               \underbrace{\vphantom{ \left(\frac{\delta f}{\delta y} \right)^2 }\left(\frac{\delta f}{\delta \theta} \right)^2}_{\text{param sens.}}
-               \underbrace{\vphantom{ \left(\frac{\delta f}{\delta y} \right)^2 } Var[\theta]}_{\text{param. uncert.}} +
-               \underbrace{\vphantom{ \left(\frac{\delta f}{\delta y} \right)^2 } Var[\varepsilon_{t+1}]}_{\text{process error}},
+\text{var}[y_{t+1}] \approx \underbrace{\left(\frac{\delta q}{\delta y} \right)^2}_{\text{stability}} 
+               \underbrace{\vphantom{ \left(\frac{\delta q}{\delta y} \right)^2 } \text{var}[y_t]}_{\text{IC uncert.}} +
+               \underbrace{\vphantom{ \left(\frac{\delta q}{\delta y} \right)^2 }\left(\frac{\delta f}{\delta x} \right)^2}_{\text{driver sens.}} 
+               \underbrace{\vphantom{ \left(\frac{\delta q}{\delta y} \right)^2 } \text{var}[x_t]}_{\text{driver uncert.}} +
+               \underbrace{\vphantom{ \left(\frac{\delta q}{\delta y} \right)^2 }\left(\frac{\delta f}{\delta \theta} \right)^2}_{\text{param sens.}}
+               \underbrace{\vphantom{ \left(\frac{\delta q}{\delta y} \right)^2 } \text{var}[\theta]}_{\text{param. uncert.}} +
+\underbrace{\vphantom{ \left(\frac{\delta q}{\delta y} \right)^2 } \text{var}[\varepsilon_{t+1}]}_{\text{process error}},
 \end{align}
 
 \noindent{}where each additive term follows a pattern of
@@ -251,9 +244,9 @@ uncertainty from Bayesian state-space models. Third, we apply our method
 to near-term forecasts of the Yellowstone bison population and measlse
 cases in China. These two applications demonstrate the generality of our
 approach. Fourth, through our applications we introduce functions
-written in the statistical programming language R (R Core Team 2016),
-which can be used to implement our method for many Bayesian state-space
-models.
+written in the statistical programming language R (\{R Core Team\}
+2016), which can be used to implement our method for many Bayesian
+state-space models.
 
 \begin{figure}
 \centering
@@ -271,12 +264,10 @@ but we used a small value of process error to highlight other
 interactions. Source code: \texttt{generate\_forecast\_fxns.R}.}
 \end{figure}
 
-\hypertarget{a-brief-history-of-quantifying-and-partitioning-forecast-uncertainty}{%
 \section{A Brief History of Quantifying and Partitioning Forecast
-Uncertainty}\label{a-brief-history-of-quantifying-and-partitioning-forecast-uncertainty}}
+Uncertainty}\label{a-brief-history-of-quantifying-and-partitioning-forecast-uncertainty}
 
-\hypertarget{error-propagation}{%
-\subsection{Error propagation}\label{error-propagation}}
+\subsection{Error propagation}\label{error-propagation}
 
 Methods for quantifying and partitioning forecast uncertainty all share
 common roots in statistical error propagation. Error propagation is
@@ -300,26 +291,22 @@ each input variable, quantified as the partial derivative. \emph{Add
 more here on interactions, which require knowing the correlations among
 x's.}
 
-\hypertarget{dynamic-theoretical-models}{%
 \subsection{Dynamic theoretical
-models}\label{dynamic-theoretical-models}}
+models}\label{dynamic-theoretical-models}
 
 Lotka-Volterra style models and variance of \emph{t+1} (draws from error
 propagation and sensitivity analysis).
 
-\hypertarget{weather-forecasting}{%
-\subsection{Weather forecasting}\label{weather-forecasting}}
+\subsection{Weather forecasting}\label{weather-forecasting}
 
 Chaos and initial conditions.
 
-\hypertarget{earth-system-models}{%
-\subsection{Earth system models}\label{earth-system-models}}
+\subsection{Earth system models}\label{earth-system-models}
 
 Carbon and uncertainty from models and scenarios.
 
-\hypertarget{a-simulation-based-approach-for-partitioning-forecast-uncertainty}{%
 \section{A Simulation-Based Approach for Partitioning Forecast
-Uncertainty}\label{a-simulation-based-approach-for-partitioning-forecast-uncertainty}}
+Uncertainty}\label{a-simulation-based-approach-for-partitioning-forecast-uncertainty}
 
 Analytical expressions of forecast uncertainty must rely on simplifying
 assumptions. Two important assumptions are (1) that different sources of
@@ -428,7 +415,9 @@ and states to their posterior means (or medians, depending on the
 distribution) to make partitioned forecasts where only prescribed
 sources of uncertainty contribute to forecast uncertainty (Table 1).
 
-\renewcommand{\arraystretch}{1.6}\begin{table}[ptb]
+\renewcommand{\arraystretch}{1.6}
+
+\begin{table}[ptb]
 \caption{Sampling equations for generating forecast distributions at times $T+q$ (where $T$ is the time of the last observation) across $k=1,\dots,K$ MCMC samples  with only certain sources of uncertainty present.}   
 \label{tab:sampling_formulas}
 \centering 
@@ -529,7 +518,7 @@ population and measles cases in China.
 
 \begin{figure}
 \centering
-\includegraphics[width=\textwidth,height=3in]{../figures/example_interaction_effect.pdf}
+\includegraphics[height=3.00000in]{../figures/example_interaction_effect.pdf}
 \caption{Graphical example of partitioning forecast uncertainty into
 main effects (\(V\)) and interaction effects (\(\varepsilon\)). The grey
 shaded area shows the interaction effect (\(\varepsilon^{(I,PA)}\)) that
@@ -553,54 +542,205 @@ initial conditions uncertainty (\(V^{(I)}\)) and parameter uncertainty
   \renewcommand{\arraystretch}{1.0}
 \end{Box}
 
-\hypertarget{application-yellowstone-bison-population}{%
 \section{Application: Yellowstone Bison
-Population}\label{application-yellowstone-bison-population}}
+Population}\label{application-yellowstone-bison-population}
 
-\hypertarget{application-measles-in-china}{%
+\subsection{Data}\label{data}
+
+Aerial counts of the Yellowstone bison population from 1970-2017 (Fig.
+3A) were used to estimate model parameters and states. Counts typically
+occurred four times a year. We used summer counts only because the
+summer aggregation of bison tends to produce more accurate counts (Hobbs
+et al. 2015). Replicate counts were taken in 41 of the 48 years, and
+from these replicates we estimated the mean annual total population in
+the park and the annual standard deviation of counts (i.e., observation
+error). We also include known harvest counts in our population model
+(Fig. 3A), as described below.
+
+We used cumulative January precipitation as an environmental covariate
+in our population model because winter snow limits the ability of bison
+to access forage (Fig. 3B). We could have used snow water equivalent
+observations from SNOTEL sites, but future projections of snow pack are
+much more difficult to generate and obtain the projections of
+precipitation.
+
+\begin{figure}[!ht]
+  \centering
+      \includegraphics{../figures/bison_data_plots.png}
+  \caption{Time series of (A) annual summer counts of Yellowstone bison (mean $\pm$ 1 S.D.) and (B) accumulated annual snow water equivalent from the West Yellowston SNOTEL station. These data were used to estimate parameters and states in our model. Blue points are training data, orange points are validation data for which we made forecasts.}
+\end{figure}
+
+\subsection{Yellowston bison: state-space
+model}\label{yellowston-bison-state-space-model}
+
+We used a Bayesian state-space model to obtain posterior distributions
+of all unknown parameters, latent states, and forecasts of future
+states. The fully specified model, including a model of the ecological
+process, a model linking the process to the data, and parameter models,
+takes the form:
+
+\vspace{-2em}
+
+\begin{align}
+\left[ \boldsymbol{\theta}_\text{p}, \kappa, z_{(t)} | y_{(t)}, x_{(t)} \right ] &\propto \prod_{t=2}^{48} \underbrace{\left[ z_{(t)} | \boldsymbol{\theta}_\text{p}, z_{(t-1)}, x_{(t)} \right]}_{\text{process}} \prod_{t=1}^{41} \underbrace{\left[ y_{(t)} | \kappa, z_{(t)} \right]}_{\text{data}} \underbrace{\left[ \boldsymbol{\theta}_\text{p}, \kappa, z_{(t=1)}\right]}_{\text{parameters}},
+\end{align}
+
+\noindent{}where \(\boldsymbol{\theta}_\text{p}\) is a vector of
+parameters in the process model, \(z_{(t)}\) is the latent, or
+unobservable and true, state of the bison population abundance at time
+\emph{t}, \(y_{(t)}\) is the observed state of bison population
+abundance at time \emph{t}, \(x_{(t)}\) is the standardized value of
+cumulative January precipitation at time \emph{t}, and \(\kappa\) is a
+variance term associated with the model likelihood (see below). Note
+that the product associated with the ``process model'' applies over
+seven more years than the product associated with the ``data model.''
+The extra seven years are forecasts of the latent state seven years into
+the future, for which no likelihood can be calculated.
+
+Our process model represents the population dynamics of the Yellowstone
+bison using the stochastic model
+
+\vspace{-2em}
+
+\begin{align}
+\mu_{(t)} &= \text{log}(z_{(t-1)}) + e_{(t-1)} + r + b_0 \left( \text{log}(z_{(t-1)}) + e_{(t-1)} \right) + b_1 x_{(t)}, \\
+\text{log}(z_{(t)}) &\sim \text{Normal}\left( \mu_t, \sigma^2_\text{p} \right),
+\end{align}
+
+\noindent{}where the determinstic model for \(\mu_{(t)}\) is a Gompertz
+model of population growth that predicts the mean of \(z_{(t)}\) on the
+log scale as function of the true state of the log population at time
+\(t-1\) (\(z_{(t-1)}\)), the intrinsic, per capita rate of increase
+(\emph{r}), the strength of density-dependence (\(b_0\)), the effect
+(\(b_1\)) of January precipitation at time \emph{t} (\(x_{(t)}\)), and
+\(e_{(t)}\) is the logarithmic integration of extractions occuring
+between observations in year \(t-1\) and year \(t\). The quantity
+\(\sigma^2_\text{p}\) is the process variance on the log scale, which
+accounts for all the drivers of the true state that are not found in the
+determinstic model.
+
+We used a negative binomial likelihood to link the observations
+(\(\textbf{y}\)) to the estimated latent states (\(\textbf{z}\)). The
+likelihood is
+\(y_{(t)} \sim \text{NB} \left( z_{(t)} , \kappa \right)\). We used a
+negative binomial likelihood rather than a poisson because there was
+evidence of over-dispersion.
+
+Our state-space model requires prior distributions for all parameters
+and for the initial condition of \(z\). We used an informative prior for
+the intrinsic growth rate, \(r\), based on the population growth
+(\(\lambda\)) reported by Hobbs et al. (2015). The Hobbs et al. (2015)
+model includes estimates of two population growth rates, one for
+populations infected with brucellosis and one for populations not
+infected with brucellosis. Although the population growth rate was
+depressed in brucellosis-infected populations, the posterior estimate of
+the difference between the two growth rates overlapped zero, indicating
+little support for differentiating among the two. We therefore chose to
+use the estimates for the brucellosis-free population: mean \(= 1.11\)
+and s.d. \(=0.0241\). We converted \(\lambda\), the population growth
+rate, to \(r\), the per capita rate of increase, by log-transforming
+\(\lambda\): \(r = \text{log}(\lambda) = 0.1\). To get the standard
+deviation on the same scale, we simulated 100,000 numbers from the
+distribution \(\log(\text{Normal}(1.11,0.0241))\) and calculated the
+standard deviation of those numbers, which equaled 0.02. Thus, our prior
+distribution for \(r\) was \(\text{Normal}(0.1, 0.02)\). We defined the
+prior distribution of the initial condition \(z_{(t=1)}\) as
+\(z_{(t=1)} \sim \text{Normal} \left(y_{(t=1)}, \sigma^2_{\text{o},(t=1)} \right)\).
+
+We chose all other prior distributions to be vague. However, no prior
+distribution is completely uninformative, so we made sure that our
+choice of priors did not have large impacts on posteriors by trying
+several choices of priors and their associated parameters. We then
+observed their effects on the posteriors (Hobbs and Hooten 2015), which
+were small. Our final chosen priors were:
+\(1/\sigma^2_{\text{p}} = \tau_\text{p} \sim \text{Gamma}(0.01,0.01)\)
+and \(b_{\in (0,1)} \sim \text{Normal}(0,1000)\).
+
+We estimated the posterior distributions of parameters and states using
+Markov chain Monte Carlo (MCMC) methods implemented using JAGS 4.2.0
+(Plummer) and the \texttt{rjags} package (Plummer2) to connect JAGS to R
+(R citation). Posterior samples were collected from three chains, each
+with unique initial values that were variable relative to the posterior
+distributions. We used 50,000 iterations to adapt the chains for optimal
+sampling, then accumulated 100,000 samples from each chain after an
+initial burn-in period of 50,000 itareations. We checked for convergence
+and stationarity of the MCMC chains by visually inspecting the trace
+plots for each parameter and state, and by calculating multivariate
+scale reduction factors and the Gelman metric (citations) using the
+\texttt{coda} package in R.
+
+\subsection{Yellowston bison: results}\label{yellowston-bison-results}
+
+The posterior distributions of model parameters show that
+density-dependence is evident but weak (\(\beta_0\) in Fig. 4),
+accumulated snow water equivalent has a weak negative effect on bison
+population growth (\(\beta_1\) in Fig. 4), and that the prior
+distribution of per capita growth rate entirely informed the posterior
+distribution (\(r\) in Fig. 4). The complete overlap of the prior and
+posterior distributions for \(r\) is not unexpected because we used a
+strong prior informed by a previous study using this same data (though
+with a different model) (Hobbs et al. 2015).
+
+\begin{figure}[!ht]
+  \centering
+      \includegraphics{../figures/bison_post_params.png}
+  \caption{Posterior distributions of select model parameters: $\beta_0=$ density-dependence, $\beta_1=$ effect of January precipitation, $r=$ per capita growth rate, $\sigma_{\text{p}}=$ process error. The dashed line in the panel for $r$ is the informed prior distribution. Prior distributions are not shown for other parameters because they are not visible on the scale of the posteriors.}
+\end{figure}
+
+Model forecasts are very uncertain and grew over time (Fig. 5A). Indeed,
+by 2017 forecasts ranged from \textasciitilde{}2,000 bison to over
+10,000 bison. Forecast uncertainty mostly comes from driver error, which
+accounts for about 70\% of total forecast variance (Fig. 5B). Initial
+conditions error is consistently low across all years, as is parameter
+error. Process error contributes about 15-25\% across all years.
+
+\begin{figure}[!ht]
+  \centering
+      \includegraphics[height=5in]{../figures/bison_combined.png}
+  \caption{(A) Posterior predictions (before dashed vertical line) and forecasts (after dashed vertical line) of the Yellowstone bison population. Solid line is the median of the posterior predictive distribution and the shaded area is the 95\% Bayesian credible interval. Forecasts shown here were made using known values of accumulated snow water equivalent in each year. (B) Partitioned forecast variance using the simulation approach algorithm in Box 1.}
+\end{figure}
+
 \section{Application: Measles in
-China}\label{application-measles-in-china}}
+Niger}\label{application-measles-in-niger}
 
-\hypertarget{discussion}{%
-\section{Discussion}\label{discussion}}
+\section{Discussion}\label{discussion}
 
-\hypertarget{acknowledgements}{%
-\section{Acknowledgements}\label{acknowledgements}}
+\section{Acknowledgements}\label{acknowledgements}
 
 This research was funded by National Science Foundation grant
-DEB-1353078 (awarded to PBA).
+DEB-1353078 (awarded to Peter B. Adler) and NIH MIDAS xxxxx (awarded to
+John M. Drake).
 
 \setlength{\parindent}{0pt}
 
-\hypertarget{references}{%
-\section{References}\label{references}}
+\section{References}\label{references}
 
 \hypertarget{refs}{}
-\leavevmode\hypertarget{ref-Bauer2015}{}%
+\hypertarget{ref-Bauer2015}{}
 Bauer, P., A. Thorpe, and G. Brunet. 2015. The quiet revolution of
 numerical weather prediction. Nature 525:47--55.
 
-\leavevmode\hypertarget{ref-Berliner1996}{}%
+\hypertarget{ref-Berliner1996}{}
 Berliner, L. M. 1996. Hierarchical Bayesian Time Series Models. Pages
 15--22 \emph{in} Maximum entropy and bayesian methods.
 
-\leavevmode\hypertarget{ref-Cariboni2007}{}%
+\hypertarget{ref-Cariboni2007}{}
 Cariboni, J., D. Gatelli, R. Liska, and A. Saltelli. 2007. The role of
 sensitivity analysis in ecological modelling. Ecological Modelling
 203:167--182.
 
-\leavevmode\hypertarget{ref-Clark2001}{}%
+\hypertarget{ref-Clark2001}{}
 Clark, J. S., S. R. Carpenter, M. Barber, S. Collins, A. Dobson, J. A.
 Foley, D. M. Lodge, M. Pascual, R. Pielke, W. Pizer, C. Pringle, W. V.
 Reid, K. A. Rose, O. Sala, W. H. Schlesinger, D. H. Wall, and D. Wear.
 2001. Ecological forecasts: an emerging imperative. Science
 293:657--660.
 
-\leavevmode\hypertarget{ref-Dietze2017a}{}%
+\hypertarget{ref-Dietze2017a}{}
 Dietze, M. C. 2017. Prediction in ecology: A first-principles framework.
 Ecological Applications 27:2048--2060.
 
-\leavevmode\hypertarget{ref-Dietze2018}{}%
+\hypertarget{ref-Dietze2018}{}
 Dietze, M. C., A. Fox, L. M. Beck-Johnson, J. L. Betancourt, M. B.
 Hooten, C. S. Jarnevich, T. H. Keitt, M. A. Kenney, C. M. Laney, L. G.
 Larsen, H. W. Loescher, C. K. Lunch, B. C. Pijanowski, J. T. Randerson,
@@ -609,24 +749,24 @@ White. 2018. Iterative near-term ecological forecasting: Needs,
 opportunities, and challenges. Proceedings of the National Academy of
 Sciences 115:1424--1432.
 
-\leavevmode\hypertarget{ref-Gelfand1990}{}%
+\hypertarget{ref-Gelfand1990}{}
 Gelfand, A. E., and A. F. Smith. 1990. Sampling-based approaches to
 calculating marginal densities. Journal of the American Statistical
 Association 85:398--409.
 
-\leavevmode\hypertarget{ref-Hobbs2015}{}%
+\hypertarget{ref-Hobbs2015}{}
 Hobbs, N. T., and M. B. Hooten. 2015. Bayesian Models: A Statistical
 Primer for Ecologists. Princeton University Press, Princeton.
 
-\leavevmode\hypertarget{ref-R2016}{}%
-R Core Team. 2016. R: A language and environment for statistical
+\hypertarget{ref-R2016}{}
+\{R Core Team\}. 2016. R: A language and environment for statistical
 computing.
 
-\leavevmode\hypertarget{ref-Sobol1993}{}%
+\hypertarget{ref-Sobol1993}{}
 Sobol', I. 1993. Sensitivity Estimates for Nonlinear Mathematical
 Models.
 
-\leavevmode\hypertarget{ref-Williams2018}{}%
+\hypertarget{ref-Williams2018}{}
 Williams, P. J., M. B. Hooten, J. N. Womble, G. G. Esslinger, and M. R.
 Bower. 2018. Monitoring dynamic spatio-temporal ecological processes
 optimally. Ecology 99:524--535.
